@@ -1,0 +1,328 @@
+/* Primer ejercicio */
+/*Algoritmos voraces*/
+Es el siglo XX y no existe Netflix ni ningun servicio de TV por demanda. En esta epoca la gente contrata servicio de TV por cable donde te envian un librito con la programacion de cada canan dia por dia.
+Como el fin de semana estara lloviendo, planeas encerrarte a ver peliculas. Del librito de programacion seleccionaste n peliculas que te interesan(que se transmiten en distintos canales) y para cada pelicula i, con 1<= y <= n, tienes el horario de comienzo ci, y de final fi. Por supuesto no puedes ver dos peliculas a la vez.
+Debes encontrar cuales de las n peliculas vas a ver, de manera que la cantidad sea maxima. Se pide lo siguiente:
+(a) Indicar de manera simple y concreta, cual es el criterio de seleccion voraz para construir la solucion.
+(b) Indicar que estructuras de datos utilizaras para resolver el problema.
+(c) Explicar en palabras como resolvera el problema el algoritmo.
+(d) Implementar el algoritmo en el lenguaje de la materia de manera precisa.
+
+--a
+Seleccionar la pelicula mas pronta en finalizar.
+
+--b
+Type Movie = tuple
+            id: nat
+            timeStart: nat
+            timeEnd: nat
+end tuple
+
+--c
+Se va a tomar el conjunto de peliculas donde con el algortimo voraz se traera la peliculas que mas pronto finalia, de esa manera se guarda el tiempo de finalizacion de esta como parametro para la eleccion de la siguiente como inicio, ademas se va a descartar las peliculas que ya no cumplan o esten dentro del tiempo de la pelicula actual, dejando solo las que su hora de inicio sea igual o superior al de finalizacion de la pelicula anterior elegida, luego de esta manera armar una lista de peliculas como salida de la ejecucion. 
+
+--d
+fun topMovies(Pelis: Set of Movie) ret lista:List of Movie
+    --variables
+    copyP: Set of Movie
+    peli: movie
+    tiempo: float
+
+    --iniciar variables
+    copyP = copy_set(Pelis)
+    tiempo = 0.0
+    lista = empty_list()
+
+    --ejecucion
+    while (not is_empty_set(copyP)) do
+        peli = select_movie(copyP, tiempo)
+        elim(copyP, peli)
+        addr(lista, peli)
+        tiempo = tiempo + peli.timeEnd
+        cleanPelis(copyP, tiempo)
+    od
+    set_destroy(copyP)
+end fun
+
+fun select_movie(Pelis: Set of Movie, tiempo: float) ret res:Movie
+    --variables
+    copyP: Set of Movie
+    peli: Movie
+
+    --iniciar variables
+    copyP = copy_set(Pelis)
+
+    --ejecucion
+    while (not is_empty_set(copyP)) do
+        peli = get(copyP)
+        if(tiempo < peli.timeEnd) then
+            tiempo = peli.timeEnd
+            res = peli
+        fi
+        elim(copyP, peli)
+    od
+    set_destroy(copyP)
+end fun
+
+proc cleanPelis(in/out Pelis: Set of Movie, in tiempo:float)
+    --variables
+    copyP: Set of Movie
+    peli: Movie
+
+    --iniciar variables
+    copyP = copy_set(Pelis)
+
+    --ejecucion
+    while (not is empty_list(copyP)) do
+        peli = get(copyP)
+        if(peli.timeStart < tiempo) then
+            elim(Pelis, peli)
+        fi
+        elim(copyP, peli)
+    od
+    set_destroy(copyP)
+end proc
+
+/*Segundo ejercicio*/
+/*BACKTRACKING*/
+Ya pasaste los 35 y al fin te pones las pilas para hacer ejercicio fisico. En el gimnacio tienes un plan con "n" ejercicios donde cada ejercicio "i", con 1 <= i <= n tiene asociado un valor de entrenamiento general "ei". Ademas cada ejercicio i requiere un esfuerzo de brazos "bi", un esfuerzo de zona media "zi" y un esfuerzo de piernas "pi".
+Se debe encontrar el maximo valor de entrenamiento general obtenible al elegir ejercicios sin que el esfuerzo total en brazos supere el maximo B, el esfuerzo total en zona media supere el monto Z y el esfuerzo total en piernas supere el monto P.
+
+Resolver el problema utilizando las tecnicas de backtracking dando una funcion recursiva. Para ello:
+(a) Especificar precisamente que calcula la funcion recursiva que resolvera el problema, indicando que argumentos toma y la utilidad de cada uno.
+(b) Dar la llamada o la expresion principal que resolvera el problema.
+(c) Definir la funcion en notacion matematica.
+
+--a
+La funcion recursiva calcula el maximo valor de entrenamiento general, sin que el esfuerzo total de brazos, zona media y piernas superen cierto monto cada uno.
+Los argumentos que tomara seran:
+i = ejercicio en consideracion  
+br = esfuerzo restante de brazos
+zm = esfuerzo restante de zona media
+pie = esfuerzo restante de piernas
+
+--b
+la expresion pricipal sera gym(N,B,Z,P)
+
+--c
+la notacion matematica sera gym(i, br, zm, pie)
+{-caso base-}
+0                                                                           si i = 0 /*no tengo ejercicios*/
+{-caso fuera de limites-}
+-inf                                                                        si i > 0 and (br < 0 or zm < 0 or pie < 0) /*tengo ejercicios pero no queda esfuerzo*/
+{-caso recursivo-}
+max(gym(i-1,br,zm,pie), e + gym(i-1, br - br_i, zm - zm_i, pie - pie_i))    si i > 0 and (br >= 0 and zm >= 0 and pie >= 0)
+
+/*Tercer ejercicio*/
+/*Programacion dinamica*/
+Implementa un algoritmo que utilice Programacion Dinamica para resolver el problema anterior y luego responda:
+(a) Que dimensiones tiene la tabla que el algoritmo debe llenar?
+(b) En que orden se llena la misma?
+(c) Se podria llenar de otra forma? En caso afirmativo indicar cual.
+
+fun gym(n,B,Z,P: nat, br,zm,pie,v:array[1...n] of nat) ret res:nat
+    --variables
+    var aux : array[1...n,0...B,0...Z,0...P] of nat
+
+    {-Caso base-} /*no tengo ejercicios*/
+    for j = 0 to B do
+        for k = 0 to Z do
+            for l = 0 to P do
+                aux[0,j,k,l] = 0
+            od
+        od
+    od
+
+    {-Casos fuera de limites-}
+    /*No sucederan ya que por como se definio los indices no seran < 0*/
+
+    {-Caso recursivo-}
+    for i = 1 to n do
+        for j = 1 to B do
+            for k = 1 to Z do
+                for l = 1 to P do
+                    aux[i,j,k,l] = aux[i-1,j,k,l]
+                    if (br[i] <= j and zm[i] <= k and pie[i] <= l) then
+                        aux[i,j,k,l] = max(aux[i-1,j,k,l], v[i] + aux[i-1, j-br[i], k-zm[i], l-pie[i]])
+                    fi
+                od
+            od
+        od
+    od
+    res = aux[n,B,Z,P]
+end fun
+
+--a
+La tabla tiene 4 dimensiones.
+
+--b
+la tabla se llena de arriba hacia abajo y de izquierda a derecha.
+
+--c
+la tabla se podria llenar de derecha a izquierda o de abajo hacia arriba mientras cada celda necesaria pra cada calculo este disponible y se respete las dependencias entre las subsoluciones.
+
+/*Cuarto Ejercicio*/
+Para cada uno de los siguientes algoritmos determinar por separado cada uno de las siguientes preguntas:
+(a) Que hace? Cuales son las precondiciones necesarias para que haga eso?
+(b) Como lo hace?
+(c) El orden del algoritmo, analizando los distintos casos posibles.
+(d) Proponer nombres mas adecuados para los identificadores(de variables, funciones y procedimientos)
+
+proc q(in/out a:array[1...N] of int, in x:nat)
+    for j = 1 to x do
+        m = j
+        for k = j+1 to x do
+            if (a[k] < a[m]) then
+                m = k
+            fi
+        od
+        swap(a,j,m)
+    od
+end proc
+--[1,7,3,5,2,4,6]
+--a
+ordena un arreglo hasta el valor de x ingresado.
+la precondicion es que x debe ser mayor a o igual que 2
+--b
+en un ciclo evalua el siguente elemento con el anterior y asi encontrar el menos y luego poder generar el cambio
+--c
+EL orden de q es n²
+--d
+q = ordenarhasta
+m = min
+
+proc p(in/out a:array[1...N] of int, int i:nat)
+    q(a, i-1)
+    r(a, i+1)
+end proc
+--[1,7,3,5,2,4,6]
+--a
+Este procedimiento ordena el arreglo a desde la posicion 1 hasta la posicion i-1 y luego ordena el arreglo desde la posicion i+1 hasta la posicion N
+--b
+El procedimiento p llama a dos procedimientos q y r y a traves de estos ordena el arreglo a
+--c
+El orden de p es n²
+--d
+p = ordenarArreglo
+
+proc r(in/out a:array[1...N] of int, in y:nat)
+    for j = y to n do
+        m = j
+        while (m > y and a[m] < a[m-1]) do
+            swap(a,m,m-1)
+            m = m-1
+        od
+    od
+end proc
+--[1,7,3,5,2,4,6]
+--a
+Este procedimiento ordena el arreglo a desde la posicion y hasta la posicion n
+--b
+El procediminto r recorre el arreglo a desde la posicion y hasta la posicion n y va comparando los elementos del arreglo y si encuentra un elemento menor al anterior lo intercambia
+--c
+El orden de r es n²
+--d
+r = ordenarDesde
+
+/*Quinto ejercicio*/
+Considere la siguiente especificacion del tipo Pila de elementos de tipo T:
+spec Stack of T where
+constructors
+    fun emptyStack() ret s:Stack of T
+    {-Crea una pila vacia-}
+
+    proc push(in/out s:Stack of T, in e:T)
+    {-Agrega un elemento a la pila s-}
+
+destructors
+    proc destroy(in/out s:Stack of T)
+    {-Destruye la pila s-}
+
+copy
+    fun copyStack(in s:Stack of T) ret c:Stack of T
+    {-Copia la pila s-}
+
+operations
+    fun is_empty_stack(in s:Stack of T) ret b:bool
+    {-Devuelve true si la pila s esta vacia-}
+
+    fun top(in s:Stack of T) ret e:T
+    {-Devuelve el elemento tope de la pila s-}
+    {-Precondicion: la pila s no esta vacia-}
+
+    proc pop(in/out s:Stack of T)
+    {-Quita el elemento tope de la pila s-}
+    {-Precondicion: la pila s no esta vacia-}
+
+end spec
+
+(a) Utilizando como representacion un arreglo de N elementos y un numero natural, implementar los constructores y todas las operaciones indicando el orden de complejidad de cada una.
+(b) La representacion elegida tiene alguna limitacion ? Si es asi, cual? Justifique su respuesta.
+(c) Podria implementarse el tipo Pila utilizando como representacion interna un conjunto de elementos ? Justifique su respuesta.
+(d) Utilizando el tipo abtracto, implementar un procedimiento invert que inverta los elementos de una pila de elementos de tipo T, Que orden de complejidad tiene la implementacion?
+
+--a
+implement Stack of T where
+type Stack = tuple
+            elem : array[1...N] of T
+            size : nat
+end tuple
+
+constructors
+    fun emptyStack() ret s:Stack of T  /*orden O(1)*/
+        s.size = 0
+    end fun
+
+    proc push (in/out s:Stack of T, in e:T) /*orden O(1)*/
+        s.size = s.size + 1
+        s.elem[s.size] = e
+    end proc
+
+copy
+    fun copyStack(in s:Stack of T) ret c:Stack of T  /*orden O(n)*/
+        c = emptyStack
+        c.size = s.size
+        if (not is_empty_stack(s)) then
+            for i = 1 to s.size do
+                c.elem[i] = s.elem[i]
+            od
+        fi        
+    end fun
+
+operations
+
+    fun is_empty_stack(in s:Stack of T) ret b:bool /*orden O(1)*/
+        b = (s.size == 0)
+    end fun
+
+    fun top(in s:Stack of T) ret e:T /*orden O(1)*/
+        e = s.elem[s.size]
+    end fun
+
+    proc pop(in/out s:Stack of T) /*orden O(1)*/
+        s.size--
+    end proc
+
+--b
+la limitacion que presenta es por el tamaño ya que tiene un arreglo de N elementos y el size esta limitado a ese N.
+
+--c
+No podria utilizarse un conjunto para representar una Pila ya que en los conjuntos no existe el oden.
+
+--d
+proc invert(in/out s:Stack of T)  /* orden O(n)*/
+    copy: Stack of T
+
+    if(not is_empty_stack(s)) then
+        copy = copyStack(s)
+        while (not is_empty_stack(s)) do
+            pop(s)
+            od
+        while (not is_empty_stack(copy)) do
+            push(s,top(copy))
+            pop(copy)
+        od
+        destroy(copy)
+    fi
+end proc
+
