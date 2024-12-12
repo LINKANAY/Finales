@@ -1,0 +1,218 @@
+/* TAD LIQUIDITY POOL */
+//spec LiquidityPool of T
+
+contructors
+    proc init(in/out LP:LiquidityPool, in name1:string, in name2:string, in tasa:float)
+
+operations
+    proc addLiquidez(in/out LP:LiquidityPool, money1:float, money2:float)
+    {-PRE: debe respetar la tasa de cambio-}
+
+    fun getName1(LP:LiquidityPool) ret res:string
+
+    fun getName2(LP:LiquidityPool) ret res:string
+
+    fun getMoney1(LP:LiquidityPool) ret res:float
+
+    fun getMoney2(LP:LiquidityPool) ret res:float
+
+    fun getTasa(LP:LiquidityPool) ret res:float
+
+    proc intercambio1x2(in/out LP:LiquidityPool, in q1:float, out q2:float)
+
+    proc intercambio2x1(in/out LP:LiquidityPool, in q2:float, out q1:float)
+
+//implementacion 
+type alcancia = tuple
+                    nameNomey1:string
+                    nameNomey2:string
+                    money1:float
+                    money2:float
+                    tasaDeCambio:float
+                end tuple
+
+typedef LiquidityPool of alcancia
+
+contructors
+
+    proc init(in/out LP:LiquidityPool, in name1:string, in name2:string, in tasa:float)
+        LP.nameNomey1 = name1
+        LP.nameNomey2 = name2
+        LP.money1 = 0
+        LP.money2 = 0
+        LP.tasaDeCambio = tasa
+    end proc
+
+operations
+
+    proc addLiquidez(in/out LP:LiquidityPool, money1:float, money2:float)
+        {-PRE: debe respetar la tasa de cambio-}
+        if(money1*getTasa(LP) == money2)
+            LP.money1 = money1
+            LP.money2 = money2
+        fi
+    end proc
+
+    fun getName1(LP:LiquidityPool) ret res:string
+        res = LP.nameNomey1
+    end fun
+
+    fun getName2(LP:LiquidityPool) ret res:string
+        res = LP.nameNomey2
+    end fun
+
+    fun getMoney1(LP:LiquidityPool) ret res:float
+        res = LP.money1
+    end fun
+
+    fun getMoney2(LP:LiquidityPool) ret res:float
+        res = LP.money2
+    end fun
+
+    fun getTasa(LP:LiquidityPool) ret res:float
+        res = LP.tasaDeCambio
+    end fun
+
+    proc intercambio1x2(in/out LP:LiquidityPool, in q1:float, out q2:float)
+        if(q1 <= getMoney1(LP))
+            q2 = q1*getTasa(LP)
+            LP.money1 -=q1
+            LP.money2 +=q2
+        fi
+    end proc
+
+    proc intercambio2x1(in/out LP:LiquidityPool, in q2:float, out q1:float)
+        if(q2 <= getMoney2(LP))
+            q1 = q2/getTasa(LP)
+            LP.money1 += q1
+            LP.money2 -=q2
+        fi
+    end proc
+
+//utilizando tad LiquidityPool resuelva
+
+    proc dobleIntercambio(in/out LP1, LP2: LiquidityPool, in q1:float, out q2:float)
+        if(q1*getTasa(LP1) <= getMoney1(LP2))
+            q2 = (q1*getTasa(LP1))*getTasa(LP2)
+            intercambio1x2(LP1, q1)
+            intercambio1x2(LP2, q1*getMoney1(LP1))
+        fi
+    end proc
+
+
+//BACKTRAKING
+/* a. Que calcula la funcion recursiva que resolvera el problema */
+/* b. Que argumentos toma y utilidad de cada uno */
+/* c. dar la llamada o la expresion principal que resuelve el problema */
+/* d. definir la funcion en notacion matematica */
+
+//a.
+la funcion recursiva calcula el maximo valor de entrenamiento general obtenible al elegir ejercicios sin que el esfuertotal de brazos, zona media y piernas superen ciertos limites cada uno.
+
+//b.
+Toma los siguientes argumentos.
+N = cantidad de ejercicios.
+B = limite de esfuerzo en brazos.
+Z = limite de esfuerzo en zona media.
+P = limite de esfuerzo en piernas.
+
+//c.
+expresion principal: entrenamiento(N, B, Z, P)
+
+//d.
+notacion matematica:
+entrenamiento(i, br, zm, pi)
+0                                               si i = 0
+-inf                                            si i > 0 & (br < 0 v zm < 0 v pi < 0)
+entrenamiento(i-1, br, zm, pi)                  si i > 0 & (br < br[i] v zm < zm[i] v pi < pi[i])
+max(entrenamiento(i-1, br, zm, pi), v[i] + entrenamiento(i-1, br - br[i], zm - zm[i], pi - pi[i]))  si i > 0 & (br >= br[i], zm >= <zm[i], pi >= pi[i])
+
+
+//PROGRAMACION DINAMICA
+
+fun entrenamiento (n,B,Z,P:nat, v,br,zm,pi:array[1...n] of nat) ret res:nat
+    var aux: array[0...n. 0...B, 0...Z, 0...P] of nat
+
+    {-caso base-}
+    {-No hay ejercicios-}
+    for i = 0 to B do
+        for j = 0 to Z do
+            for k = 0 to P do
+                aux[0,i,j,k] = 0
+            od
+        od
+    od
+
+    {-Me quedan ejercicios pero no energia en los brazos-}
+    for i = 0 to n do
+        for j = 0 to Z do
+            for k = 0 to P do
+                aux[i,0,j,k] = -inf
+            od
+        od
+    od
+
+    {-Me quedan ejercicios pero no energia en zona media-}
+    for i = 0 to n do
+        for j = 0 to B do
+            for k = 0 to P do
+                aux[i,j,0,k] = -inf
+            od
+        od
+    od
+
+    {-Me quedan ejercicios pero no energia en las piernas-}
+    for i = 0 to n do
+        for j = 0 to B do
+            for k = 0 to Z do
+                aux[i,j,k,0] = -inf
+            od
+        od
+    od
+
+
+    {-Caso recursivo-}
+    for i = 0 to n do
+        for j = 0 to B do
+            for k = 0 to Z do
+                for m = 0 to P do
+                    if(br[i] > j or zm[i] > k or pi[i] > m) then
+                        aux[i,j,k,m] = aux[i-1,j,k,m]
+                    else if (br[i] <= j and zm[i] <= k and pi[i] <= m) then
+                        aux[i,j,k,m] = max(aux[i-1,j,k,m], v[i] + aux[i-1, j-br[i], k-zm[i], m-pi[i]])
+                    fi
+                of
+            of
+        of
+    of
+    res:aux[n,B,Z,P]
+end fun
+
+/* Cuarto ejercicio */
+{- Dar la forma general de los algoritmos divide y venceras, identificar sus caracteristicas, explicarlas y mencionar ejemplos de uso conocido de esa tecnica -}
+
+//foprma general
+fun DyV ret y
+    if x suficientemente pequeño o simple then 
+        y = ad_hoc(x)
+    else
+        //decomponer x en x1, x2, ..., xn
+        for i = 1 to n do
+            y= DyV(xi)
+        od
+        //combinar y1, y2, ..., yn para obtener la solucion y de x
+    fi
+end fun
+
+//caracteristicas
+{-hay una solucion para los problemas sencillos
+para los problemas complejos, se divide o descompone el problema en subproblemas:
+    cada subproblema es de igual naturaleza que el original
+    el tamaño del problema es una fraccion del original
+    se resuelven los subproblemas usando el mismo algoritmo
+se combinan esas soluciones para obtener una solucioin original-}
+
+//ejemplos de uso
+{-ordenacion por intercalacion
+ordenacion rapida
+busqueda binaria-}

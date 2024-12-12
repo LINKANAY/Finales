@@ -1,0 +1,362 @@
+/*Primer ejercicio*/
+/*(Algoritmos voraces)*/
+Estas en epoca de examenes y tienes n materias cursadas, no correlativas entre sí, que podrías rendir. 
+Cada materia tiene un día de examen: d1, . . . , dn, y una cantidad de días previos consecutivos al examen que vos necesitás dedicar exclusivamente a su estudio: c1, . . . , cn. También asumimos que el día que rendís un examen se dedica solamente a eso, no podés estudiar otra materia. Así por ejemplo si la materia "Bases de Datos" se rinde el día 10, y necesita 2 días de estudio, para poder rendirla tenés que dedicar el día 8 y 9 exclusivamente a la misma, y en el día 11 ya podrías empezar a estudiar otra materia. 
+Se supone que solo estudiás la materia que estás por rendir, por más que te sobren días no comenzás a estudiar la siguiente para no confundir los temas.
+
+Todos los di y los ci son números naturales, inicialmente estamos al comienzo del día 1. 
+
+Se debe obtener la mayor cantidad de materias que podés rendir.
+Se pide lo siguiente:
+(a) Indicar de manera simple y concreta, cuál es el criterio de selección voraz para construir la solución?
+(b) Indicar qué estructuras de datos utilizarás para resolver el problema.
+(c) Explicar en palabras cómo resolverá el problema el algoritmo.
+(d) Implementar el algoritmo en el lenguaje de la materia de manera precisa.
+
+--a
+El criterio de seleccion voraz elegido sera seleccionar las materias mas protas a rendir.
+
+--b
+type Examen = tuple
+                id:nat
+                diaDeExamen:nat
+                diasExclusivos:nat
+            end tuple
+
+--c
+Se tomara un conjunto de materias.
+Se ingresa al ciclo.
+Se elegira la materia mas pronta a rendir.
+Se agregara a una lista de salida.
+Se eliminara esta del conjunto de materias.
+Se descartaran las materias donde sus fechas sean menor o igual a la que se acaba de rendir.
+Se vuelve a repetir desde el ciclo hasta dejar el conjunto vacio.
+--d
+implement 
+fun examenesFinales(Finales:Set of Examen) ret lista:List of Examen
+    --variables
+    var copy:Set of Examen
+    var materia:Examen
+    var dia:nat
+
+    --iniciar variables
+    copy = copy_set(Finales)
+    dia = 1
+    lista = empty_list()
+
+    --ejecucion
+    while (not is_empty_set(copy)) do
+        materia = select_materia(copy, dia)         /*algoritmo voraz*/
+        addr(lista, materia)
+        dia = materia.diaDeExamen
+        elim(copy, materia)
+        clean(copy, dia)                            /*eliminar materias fuera de rango*/
+    od
+    --destroy
+    destroy_set(copy)
+end fun
+
+fun select_materia(Finales:Set of Examen, dia:nat) ret materia:Examen
+    --variables
+    var copy:Set of Examen
+    var auxE: Examen
+    var minDia:nat
+    var found:bool
+
+    --iniciar variables
+    copy = copy_set(Finales)
+    minDia = inf
+    found = true
+
+    --ejecucion
+    while (not is_empty_set(copy) and found) do
+        auxE = get(copy)
+        elim(copy, auxE)
+        if(auxE.diaDeExamen == dia and auxE.diasExclusivos == 0) then
+            materia = auxE
+            found = false
+        fi
+        if(auxE.diaDeExamen < minDia and ((auxE.diaDeExamen - dia) >= auxE.diasExclusivos)) then
+            materia = auxE
+            minDia = materia.diaDeExamen
+        fi
+    od
+    --destroy
+    destroy_set(copy)
+end fun
+
+proc clean(in/out Finales:Set of Examen, in dia:nat)
+    --variables
+    var copy: Set of Examen
+    var materia: Examen
+
+    --iniciar variables
+    copy = copy_set(Finales)
+
+    --ejecucion
+    while (not is_empty_set(copy)) do
+        materia = get(copy)
+        if(dia > materia.diaDeExamen) then
+            elim(Finales, materia)
+        fi
+        elim(copy, materia)
+    od
+    --destroy
+    destroy_set(copy)
+end proc
+
+/*Segundo Ejercicio*/
+/*BACKTRACKING*/
+El presidente de tu país te acaba de elegir como asesor para tomar una serie de medidas de producción que mejoren la situación económica. 
+En el análisis preliminar se proponen n medidas, donde cada medida i ∈ {1, .., n} producirá una mejora económica de m_i puntos, con m_i > 0.
+También se analizó para cada una el nivel de daño ecológico d_i que producirá, donde d_i > 0. El puntaje que tendrá cada medida _i está dado por la relación m_i/d_i.
+
+Se debe determinar cuál es el máximo puntaje obtenible eligiendo K medidas, con K < n, de manera tal que la suma total del daño ecológico no sea mayor a C.
+Se pide lo siguiente:
+(a) Especificar precisamente qué calcula la función recursiva que resolverá el problema, indicando qué argumentos toma y la utilidad de cada uno.
+(b) Dar la llamada o la expresión principal que resuelve el problema.
+(c) Definir la función en notación matemática.
+
+--a
+la funcion recursiva calcula el maximo puntaje al elegir k medidas de n disponibles, ademas se debe cumplir que el total de daño ecologico no exceda C
+
+--b
+analisis(n, k, C)
+n = medida para analizar
+k = medidas elegidas dadas
+C = daño ecologico dado
+
+--c
+notacion matematica, analisis(i, k, C)
+0                                                                            si k = 0 or i = 0
+-inf                                                                         si k > 0 and i > 0 and d_i > C
+max(analisis(i-1, k, C), m_i/d_i + analisis(i-1, k-1, C - d_i))              si k > 0 and i > 0 and d_i <= C
+
+/*Tercer Ejercicio*/
+/*Programacion Dinamica*/
+Implementá un algoritmo que utilice Programación Dinámica para resolver el problema del inciso anterior.
+(a) Qué dimensiones tiene la tabla que el algoritmo debe llenar?
+(b) En qué orden se llena la misma?
+(c) Se podría llenar de otra forma? En caso afirmativo indique cuál.
+
+fun analisis(n, K, C: nat, m,d:array[1...n]of nat) ret res:float
+    --variables
+    var aux:array[0...n, 0...K, 0...C] of float
+
+    {-caso base-}
+    for c = o to C do
+        aux[0,0,c] = 0
+    od
+
+    {-caso recursivo-}
+    for i = 1  to n do
+        for j = 1 to K do
+            for c = 0 to C do
+                if(d[i] <= c) then
+                    aux[i,j,l] = max(aux[i-1,j,c], m[i]/d[i] + aux[i-1, k-1, c - d[i]])
+                else
+                    aux[i,j,c] = aux[i-1,j,c]
+                fi
+            od
+        od
+    od
+    res = aux[n,K,C]
+end fun
+
+--a
+La tabla tiene 3 dimensiones
+
+--b
+la tabla se llena de arriba hacia abajo de izquierda a derecha
+
+--c
+se podria, pero no se deberia ya que si no se maneja de maera correcto el resultado de cada celda, entoces en analiss final se podria arruinar
+
+/*Cuarto ejercicio*/
+Para cada uno de los siguientes algoritmos determinar por separado cada uno de los siguientes incisos.
+(a) Qué hace? Cuáles son las precondiciones necesarias para haga eso?
+(b) Cómo lo hace?
+(c) El orden del algoritmo, analizando los distintos casos posibles.
+(d) Proponer nombres más adecuados para los identificadores (de variables, funciones y procedimientos).
+
+fun s(p: array[1..n] of nat, v,w: nat) ret y: nat   /*v=2, w = 4*/
+    y:= v                                           /*y = 2*/
+    for i := v+1 to w do                            /*i = 2+1 = 3*/
+        if p[i] < p[y] then                         /*3<7*/
+            y:= i                                   /*y = 3*/
+        fi
+    od
+end fun
+--[1,7,3,5,2,4,6]
+--a
+la funcion s retorna la posicion del menor elemento de un arreglo de numeros.
+De precondiciones se necesita que:
+v < n, v < w and v > 0
+w <= n
+
+--b
+a traves de un recorrido compara el actual elemento con el siguiente y si es menor entonces guarda la posicion, asi hasta llegar al limite del recorrido 
+
+--c
+El oden de s es n
+
+--d
+renombres:
+y = posicion
+s = posicionMinElem
+v = start
+w = fin
+
+
+fun t(p: array[1..n] of nat, v,w: nat) ret y: nat               /*v = 1 and w = 4*/
+    y:= v                                                       /*y = 1*/
+    for i := v+1 to w do                                        /*i = 2*/
+        if p[y] < p[i] then                                     /*1 < 7, 1<7, .... 1<5*/
+            y:= i
+        fi
+    od
+end fun
+--[1,7,3,5,2,4,6]
+--a
+la funcion t retorna la posicion del mayor elemento de un arreglo de numeros
+de precondiciones se necesita que:
+v > 0, v < w, v < n.
+w >= n
+
+--b
+a traves de un recorrido compara el actual elemento con el siguiente y si es mayor entonces guarda la posicion, asi hasta llegar al limite del recorrido 
+
+--c
+El orden de t es n
+
+--d
+t = posicionMaxElem
+
+proc r(p: array[1..n] of nat)
+    for i := 1 to n div 2 do
+        swap(p, i, s(i, n-i+1));                /*swap(arreglo, 1, posicionMinElem(1, 7-1+1)*/
+        swap(p, n-i+1, t(i+1, n-i+1));          /*swap(arreglo, 7-1+1, posicionMaxElem(2, 7-1+1)*/
+    od
+end fun
+--[1,7,3,5,2,4,6]
+--a
+el procediminto r ordena un arreglo de menor a mayor.
+n >=2
+
+--b
+a traves de un recorrido y va ordenando por partes.
+
+--c
+el orden de r es n²
+
+--d
+r = ordenarArreglo
+
+/*Quinto ejercicio*/
+/*TADs*/
+Te contratan para diseñar un software de billetera virtual, la cual puede almacenar saldo en tres monedas distintas: Peso, Real y Dólar. 
+Cada usuario puede recibir pagos en cualquiera de las tres monedas, y puede realizar pagos en alguna de las tres monedas, siempre y cuando tenga el saldo suficiente.
+
+Se pide:
+
+(a) Especificar el TAD Wallet mediante un constructor que cree la wallet con saldo 0 en las tres monedas.
+Además debe proveer operaciones para averiguar cuál es el saldo en cada moneda, para recibir pagos en cada una de las monedas y para realizar pagos con cada una de ellas también. Las operaciones de recibir y realizar pagos deben especificarse como procedimientos que modifiquen una Wallet.
+La especificación debe realizarse utilizando el lenguaje visto en la materia, indicando el tipo de cada operación,la precondición en caso que tenga y un comentario describiendo qué hace.
+(b) Implementar el tad utilizando una tupla con 3 números. Se debe utilizar precisamente el lenguaje de la materia.
+(c) Utilizando el tipo abstracto, se debe implementar una operación que, dado un número racional indicando la relación entre dólar y peso, modifique una wallet convirtiendo todos los dólares que tenga en el saldo, a su
+correspondiente en pesos. Se debe utilizar precisamente el lenguaje de la materia.
+
+--a
+spec Wallet of T where
+constructors
+    proc newWallet(in/out W: Wallet)
+    {-Crea un wallet con saldo 0 en las 3 monedas-}
+operations
+    /*consulta de saldo*/
+    fun getPeso(w: Wallet) ret saldo:float
+    {-Devuelve el saldo de pesos que tiene la wallet-}
+    fun getReal(W:Wallet) ret saldo:float
+    {-Devuelve el saldo de reales que tiene la wallet-}
+    fun getDolar(W:Wallet) ret saldo:float
+    {-Devuelve el saldo de dolares que tiene la wallet-}
+    /*recibir pagos*/
+    proc addPeso(in/out W:Wallet, in monto:float)
+    {-Se agrega saldo a los pesos-}
+    proc addReal(in/out W:Wallet, in monto:float)
+    {-Se agrega saldo a los reales-}
+    proc addDolar(in/out W:Wallet, in monto:float)
+    {-se agrega saldo a los dolares-}
+    /*realizar pagos*/
+    proc reducePeso(in/out W:Wallet, in monto:float)
+    {-Se descuenta saldo a los pesos-}
+    {-PRE: monto <= W.pesos-}
+    proc reduceReal(in/out W:Wallet, in monto:float)
+    {-Se descuenta saldo a los reales-}
+    {-PRE: monto <= W.reales-}
+    proc reduceDolar(in/out W:Wallet, in monto:float)
+    {-Se descuenta saldo a los dolares-}
+    {-PRE: monto <= W.dolares-}
+
+--b
+Implement Wallet of T where
+type Wallet = tuple
+                pesos: float
+                reales: float
+                dolares: float
+
+constructors
+    proc newWallet(in/out W:Wallet)
+        pesos = 0;
+        reales = 0;
+        dolares = 0;
+    end proc
+
+operations
+    /*consulta de saldo*/
+    fun getPeso(W:Wallet) ret saldo: float
+        saldo = W.pesos
+    end fun
+    fun getReal(W:Wallet) ret saldo: float
+        saldo = W.reales
+    end fun
+    fun getDolar(W:Wallet) ret saldo: float
+        saldo = W.dolares
+    end fun
+    /*recibir pagos*/
+    proc addPeso(in/out W:Wallet, in monto:float)
+        W.pesos = W.pesos + monto
+    end proc
+    proc addReal(in/out W:Wallet, in monto:float)
+        W.reales = W:reales + monto
+    end proc
+    proc addDolar(in/out W:Wallet, in monto:float)
+        W.dolares = W.dolares + monto
+    end proc
+    /*realizar pagos*/
+    {-PRE: monto <= W.pesos-}
+    proc reducePeso(in/out W:Wallet , in monto:float)
+        W.pesos = W.pesos - monto
+    end proc
+    {-PRE: monto <= W.reales-}
+    proc reduceReal(in/out W:Wallet, in monto:float)
+        W.reales = W.reales - monto
+    end proc
+    {-PRE: monto <= W.dolares-}
+    proc reduceDolar(in/out W:Wallet, in monto:float)
+        W.dolares = W.dolares - monto
+    end proc
+
+--c
+    proc changeDolarToPeso(in/out W:Wallet, in tasaDeCambio:float)
+        if(getDolar(W) > 0)
+            addPeso(getDolar(W)*tasaDeCambio)
+        fi
+    end proc
+
+/*Sexto ejercicio*/
+/*Para libres*/
+Algunos problemas pueden resolverse utilizando backtracking, y también utilizando programación dinámica. 
+En general, cuáles son las ventajas y desventajas de una de estas técnicas en comparación con la otra desde el punto de vista de la eficiencia?
+
+backtracking analiza todos los posibles casos pero reitera en muchos calculos generando que sea mas costoso.
+programación Dinamica guarda todos los casos para un uso futuro esto lo hace mas eficiente y menos costoso.

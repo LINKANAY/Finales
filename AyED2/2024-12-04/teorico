@@ -1,0 +1,253 @@
+/* Primer ejercicio */
+/* a. Especificacion TAD LiquidityPool*/
+spec LiquidityPool of T where
+
+    constructors
+    
+        proc Ingreso(in/out LP:LiquidityPool, in NameMoney1:string, in NameMoney2:float, 
+                    in tasa_de_cambio: float)
+            {-recibe nombre de 2 monedas y su valor en tasa de cambio-}
+    
+    operations
+    
+        proc AgregarLiquidez(in/out LP:LiquidityPool, in moneda1:float, in moneda2:float)
+            {-Recibe 2 momendas y las agrega al LP mientras respete la tasa de cambio-}
+            
+        fun NameMoney1(LP:LiquidityPool) ret res:string
+            {-dado un LP, devuelve el nombre de la moneda1-}
+        
+        fun NameMoney2(LP:LiquidityPool) ret res:string
+            {-dado un LP, devuelve el nombre de la moneda2-}
+            
+        fun getMoney1(LP:LiquidityPool) ret num:float
+            {-dado un LP, devuelve la cantidad de moneda1-}
+        
+        fun getMoney2(LP:LiquidityPool) ret num:float
+            {-dado un LP, devuelve la cantidad de moneda2-}
+        
+        fun tasa_de_cambio(LP:LiquidityPool) ret num:float
+            {-dado un LP, devuelve el valor de la tasa de cambio-}
+            
+        proc IntercambiarSumodel1Restodel2(in/out LP:LiquidityPool, in moneda1:float, 
+                                        out moneyret:float)
+            {-recibe cantidad de moneda1 que se agrega al LP, 
+            devuelve la cantidad de moneda2 que se obtiene-}
+            
+        proc IntercambiarSumodel2Restodel1(in/out LP:LiquidityPool, in moneda2:float,
+                                        out moneyret:float)
+            {-recibe cantidad de moneda2 que se agrega al LP, 
+            devuelve la cantidad de moneda1 que se obtiene-}
+            
+/* b. Implementacion TAD LiquidityPool */
+implement LiquidityPool
+type alcancia = tuple
+                    NameMoney1: string
+                    NameMoney2: string
+                    moneda1: float
+                    moneda2: float
+                    tasa_de_cambio: float
+                end tuple
+
+type LiquidityPool of alcancia 
+
+constructors
+    proc NewAlcancia(in/out LP:LiquidityPool, in NameMoney1:string, in NameMoney2:string, 
+                    in tasa_de_cambio: float)
+        LP.NameMoney1 = NameMoney1
+        LP.NameMoney2 = NameMoney2
+        LP.moneda1 = 0
+        LP.moneda2 = 0
+        LP.tasa_de_cambio = tasa_de_cambio
+    end proc
+        
+operations
+        proc AgregarLiquidez(in/out LP:LiquidityPool, in moneda1:racional, in moneda2:racional)        
+            //1 dolar son 1000 pesos
+            if (moneda1*tasa_de_cambio(LP) == moneda2) ->
+                LP.moneda1 = moneda1
+                LP.moneda2 = moneda2
+            fi
+        end proc
+        
+        fun NameMoney1(LP:LiquidityPool) ret res:string
+            res = LP.NameMoney1
+        end fun
+        
+        fun NameMoney2(LP:LiquidityPool) ret res:string
+            res = LP.NameMoney2
+        end fun
+        
+        fun getMoney1(LP:LiquidityPool) ret num:float
+            num = LP.moneda1
+        end fun
+        
+        fun getMoney2(LP:LiquidityPool) ret num:float
+            num = LP.moneda2
+        end fun
+        
+        fun tasa_de_cambio(LP:LiquidityPool) ret num:float
+            num = LP.tasa_de_cambio
+        end fun
+        
+        proc IntercambiarSumodel1Restodel2(in/out LP:LiquidityPool, in moneda1:float, 
+                                        out moneyret:float)
+            if (moneda1 * tasa_de_cambio(LP) <= getMoney2(LP))
+                moneyret = moneda1 * tasa_de_cambio(LP)
+                LP.moneda1 += moneda1
+                LP.moneda2 -= moneyret
+            fi
+        end proc
+        
+        proc IntercambiarSumodel2Restodel1(in/out LP:LiquidityPool, in moneda2:float, 
+                                        out moneyret:float)
+            if (moneda2/ tasa_de_cambio(LP) <= getMoney1(LP))
+                moneyret = moneda2 / tasa_de_cambio(LP)
+                LP.moneda1 -= moneyret
+                LP.moneda2 += moneda2
+            fi
+        end proc
+        
+/* c. Utilizando el TAD LiquidityPool implementar la siguiente operacion */
+proc dobleIntercambio(in/out LP1, LP2 : LiquidityPool, in q1:float, out q2:float)
+    {-recibe 2 LP, permite intercambiar una cantidad de la moneda 1 de la LP1 por una cantidad de la moneda 2 de la LP2, 
+    esto ocurre mientras que el nombre de la moneda2 de la LP1 coincida con el nombre de la moneda1 de la LP2, 
+    ademas de que exista liquidez para realizar el intercambvio-}
+    
+    if (NameMoney2(LP1) == NameMoney1(LP2))
+            var aux : float
+            aux = q1 * tasa_de_cambio(LP1) /*converti eur a usd*/
+        if (aux <= getMoney1(LP2)) /*existe liquidez?*/
+            IntercambiarSumodel2Restodel1(LP1, q1, q2) /*LP1.moneda1 -= q1 luego LP1.moneda2 +=aux*/
+            IntercambiarSumodel2Restodel1(LP2, aux, q2) /*LP1.moneda1 -= aux luego LP2.moneda2 +=aux*tasa_de_cambio(LP2)*/
+        fi
+    fi
+end proc      
+
+/* Segundo ejercicio */
+/* Backtracking */
+/* a. Especificar precisamente que calcula la funcion recursiva que resolvera el problema, indicando que argumentos toma y la utilidad de cada uno */
+{-La funcion calcula el maximo valor de entrenamiento general sin:
+    que el esfuerzo total en brazos supere B
+    que el esfuerzo total en zona media supere Z
+    que el esfuerzo total en piernas supere P-}
+//Los argumentos que toma son:
+//    N = cantidad de ejercicios
+//    B = esfuerzo de brazos maximo
+//    Z = esfuerzo de zona media maximo
+//    P = esfuerzo de piernas maximo
+
+/* b. Dar la llamada o la expresion principal que resuelve el problema */
+//Expresion principal
+maxValorEntrenamientoGeneral(N, B, Z, P)
+/* Definir la funcion en notacion matematica */
+//Notacion matematica
+maxValorEntrenamientoGeneral(i, br, zm, pi)
+para resumir maxValorEntrenamientoGeneral(i, br, zm, pi) = maxVEG(i, br, zm, pi)
+
+maxVEG(i, br, zm, pi) = 
+    0                                                                                   si i = 0
+    -inf                                                                                si i > 0 y (br < 0 o zm < 0 o pi < 0)
+    maxVEG(i-1, br, zm, pi)                                                             si i > 0 y br < B[i] o zm < Z[i] o pi < P[i]
+    max(maxVEG(i-1, br, zm, pi), maxVEG(i-1, br - B[i], zm - Z[i], pi - P[i]) + V[i])   si i > 0 y br >= B[i] y zm >= Z[i] y pi >= P[i]
+
+/* Tercer ejercicio */
+/* Para el siguiente codigo responda */
+
+Proc p (in/out L: list of T)
+    var a, b: pointer to (node of T)
+    a = L
+    if a != null then
+        if a.next != null then
+            b = a.next
+            while b.next != null do
+                a = a.next
+                b = b.next
+            od
+            b.next = L
+            a.next = null
+            L = b
+        fi
+    fi
+end proc
+
+//donde los tipos de node y list se definen como sigue
+type node of T = tuple
+                    value: T
+                    next: pointer to (node of T)
+                end tuple
+
+type list of T = pointer to (node of T)
+
+/* a. Que hace? cuales son las precondiciones necesarias para que haga eso? */
+{-Que hace: encuentra el ultimo elemento de la lista y lo pone al principio de la lista
+  Precondiciones: L no es null y L.next no es null, es decir L tiene al menos 2 elementos-}
+/* b. Si le aplicamos el procedimiento a la lista que tiene los elementos [1,2,3,4,5], como es la lista resultante? */
+{-La lista resultante es [5,1,2,3,4]-}
+/* c. Como lo hace? */
+{-Siendo L=[1,2,3,4,5]
+    a = L
+    if (a != null) -> true
+        if (a.next != null) -> true
+            b = a.next -> b = [2,3,4,5]
+            while (b.next != null) -> true
+                a = a.next -> a = [2,3,4,5]
+                b = b.next -> b = [3,4,5]
+                //a = a.next -> a = [3,4,5]
+                //b = b.next -> b = [4,5]
+                //a = a.next -> a = [4,5]
+                //b = b.next -> b = [5]
+            od
+            b.next = L -> [5].next = [1,2,3,4,5]
+            a.next = null -> [4,5].next = null -> [4].next = null
+            L = b -> L = [5,1,2,3,4]
+        fi
+    fi
+-}
+
+/* d. El orden del algoritmo, analizando los distintos casos posibles */
+Proc p (in/out L: list of T)
+    var a, b: pointer to (node of T)
+    a = L  --> O(1)
+    if a != null then   --> O(1)
+        if a.next != null then  --> O(1)
+            b = a.next  --> O(1)
+            while b.next != null do  --> O(n)
+                a = a.next  --> O(1)
+                b = b.next  --> O(1)
+            od
+            b.next = L  --> O(1)
+            a.next = null  --> O(1)
+            L = b  --> O(1)
+        fi
+    fi
+end proc
+
+//En resumen el roden del algoritmo es O(n)
+
+/* Cuarto ejercicio */
+{- Dar la forma general de los algoritmos divide y venceras, identificar sus caracteristicas, explicarlas y mencionar ejemplos de uso conocido de esa tecnica -}
+
+fun DyV ret y
+    if x suficientemente pequeño o simple the 
+        y = ad_hoc(x)
+    else
+        decomponer x en x1, x2, ..., xn
+        for i = 1 to n do
+            y= DyV(xi)
+        od
+        combinar y1, y2, ..., yn para obtener la solucion y de x
+    fi
+end fun
+
+//caracteristicas
+{-hay una solucion para los problemas sencillos
+para los problemas complejos, se divide o descompone el problema en subproblemas:
+    cada subproblema es de igual naturaleza que el original
+    el tamaño del problema es una fraccion del original
+    se resuelven los subproblemas usando el mismo algoritmo
+se combinan esas soluciones para obtener una solucioin original-}
+
+//ejemplos de uso
+{-ordenacion por intercalacion
+ordenacion rapida
+busqueda binaria-}
