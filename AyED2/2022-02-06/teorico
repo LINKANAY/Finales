@@ -1,0 +1,344 @@
+/*Primer ejercicio*/
+/*Algoritmos voraces*/
+Se pide lo siguiente:
+(a) Indicar de manera simple y concreta, cuál es el criterio de selección voraz 
+para construir la solución?
+(b) Indicar qué estructuras de datos utilizarás para resolver el problema.
+(c) Explicar en palabras cómo resolverá el problema el algoritmo.
+(d) Implementar el algoritmo en el lenguaje de la materia de manera precisa.
+
+ejercicio endemoniado
+
+/*Segundo Ejercicio*/
+/*BACKTRACKING*/
+Se pide lo siguiente:
+(a) Especificar precisamente qué calcula la función recursiva que resolverá el 
+problema, indicando qué argumentos toma y la utilidad de cada uno.
+(b) Dar la llamada o la expresión principal que resuelve el problema.
+(c) Definir la función en notación matemática.
+
+
+ejercicio endemoniado
+
+
+/*Tercer ejercicio*/
+Para cada uno de los siguientes algoritmos determinar por separado cada uno de 
+los siguientes incisos.
+(a) Qué hace? Cuáles son las precondiciones necesarias para haga eso?
+(b) Cómo lo hace?
+(c) El orden del algoritmo, analizando los distintos casos posibles.
+(d) Proponer nombres más adecuados para los identificadores (de variables, 
+funciones y procedimientos).
+
+fun s(v: nat, p: array[1..n] of nat) ret y: nat
+	y := v
+	while y < n and p[y] ≤ p[y+1] do
+		y := y + 1
+	od
+end fun
+--[1,7,3,5,2,4,6]
+--a
+la funcion S se encarga de encontrar la posicion del elemento donde se corta el 
+creciminto de un arreglo
+{-Pre: y < n and n >= 2-}
+
+--b
+la funcion S recibe un numero el cual sera la posicion desde la cual se va a 
+analizar y encontrar el mayor elemento, esto sucedera en un bucle mientras se 
+cumplan las condicioes de busqueda.
+
+--c
+El oden del algortimo es n.
+
+--d
+v = posicion
+s = posMayorElem
+y = auxPosicion
+
+fun t(p: array[1..n] of nat) ret y: nat
+	var z: nat
+	y, z := 0,1
+	while z ≤ n do
+		y, z := y+1, s(z,p)+1
+od
+end fun 
+--[1,7,3,5,2,4,6]
+--a
+la funcion t devuelve un numero que muestra la cantidad de veces que se corta 
+el orden creciente en un arreglo
+{-Pre: n >= 2}
+--b
+la funcion t por medio de un bucle va contando las veces en que un bucle se 
+ejecuta donde este hace llamado a la funcion s para que le traiga un valor 
+numero, mientras este valor sumado 1, cumpla la conducion del bucle este se 
+seguira ejecutando hasta que ya no la cumpla. 
+--c
+el orden del algoritmo es de n²
+--d
+t = cantidadDivisionesArreglo
+y = contador
+z = aux
+
+fun u(p: array[1..n] of nat) ret v: bool
+	v := (t(p) ≤  1)
+end fun
+--[1,7,3,5,2,4,6]
+--a
+la funcion retorna verdadero si el arreglo esta ordenado de forma creciente 
+o falso sino.
+--b
+la funcion u compara el valor de retorno de la funcion t con 1, de esta manera 
+si se cumple que sea menor o igual a 1 entoces confirma que el arreglo esta 
+ordenado de forma creciente.
+--c
+el orden del algoritmo es de n2
+
+--d
+u = is_creciente
+
+
+/*Cuarto Ejercicio*/
+(a) Especificar el tipo Lista de elementos de algun tipo T, indicando 
+constructores(para crear una lista vacia o agregar un elemento al comienzo de 
+una lista ya existente) y operaciones para:
+#indicar si una lista es vacia
+#devolver el primer elemento de la lista
+#devolver el ultimo elemento de la lista
+#devolver la lista resultante de eliminar el primer elemento
+#devolver la lista resultante de eliminar el ultimo elemento
+#devolver la longitud de la lista
+#agregar un elemento al final de la lista
+Ademas de las operaciones comunes a todos los TADs para copiar y destruir.
+
+(b) Implementar el tipo de datos utilizando punteros de manera que todas las 
+operacioes menos la de obtener la longitud, como tampoco las operacion de copia 
+y destruccion, sean de orden constante.
+
+(c) Utilizando el tipo abtracto Lista de elementos de tipo Nat, implementar un 
+procediminto para invertir el orden de los elementos de una lista. Por ejemplo 
+si la lista de entrada es [1,2,3,4,5], luego de llamar al procedimiento debera 
+ser[5,4,3,2,1]
+
+--a
+Spec Lista of T Where
+
+constructors
+fun empty_list() ret L:List of T
+{-devueve una lista vacia-}
+proc addleft(in/out L:List of T, in elem:T)
+{-agregar un elenento 'elem' al comienzo de una lista ya existente-}
+
+destructors
+proc destroy_list(in/out L:list of T)
+{-libera memoria en caso de que se use-}
+copy
+fun copy_list(L:list of T) ret cL:list of T
+{-devuelve una copia de lista-}
+{-PRE:not is_empty_list(L)-}
+
+operations
+fun is_empty_list(L:list of T) ret res:bool
+{-Devuelve true si la lista esta vacia-}
+fun firt_elem(L:list of T) ret elem:T
+{-Devuelve el primer elemento de la lista-}
+{-PRE:not is_empty_list(L)-}
+fun last_elem(L:list of T) ret elem:T
+{-Devuelve el ultimo elemento de la lista-}
+{-PRE:not is_empty_list(L)-}
+fun deletefirst(L:list of T) res lista:list of T
+{-Devuelve la lista sin el primer elemento-}
+{-PRE:not is_empty_list(L)-}
+fun deleteLast(L:list of T) res lista:list of t
+{-Devuelve la lista sin el ultimo elemento-}
+{-PRE:not is_empty_list(L)-}
+fun length_list(L:list of T) ret num:nat
+{-Devuelve la longitud de la lista-}
+proc addright(in/out L:list of T, in elem:T)
+{-agregar un elemento 'elem' al final de la lista-}
+{-PRE:not is_empty_list(L)-}
+
+--b
+Implement list of T Where
+type node of T = tuple
+				elem:T
+				next: pointer to (node of T)
+				prev: pointer to (node of T)
+end tuple
+
+type list of T = tuple
+				first: pointer to (node of T)
+				last: pointer to (node of T)
+end tuple
+
+constructors
+fun empty_list() ret L:List of T
+	L->first = NULL;
+	L->last = NULL;
+end fun
+
+proc addleft(in/out L:List of T, in elem:T)
+	var newElem: pointer to (node of T)
+	alloc(newElem)
+	newElem->elem = elem
+	newElem->next = NULL
+	newElem->prev = NULL
+	if (is_empty_list(L)) then
+		L->first = newElem
+		L->last = newElem
+	else
+		newElem->next = L->first
+		L->first->prev = newElem
+		L->first = newElem
+	fi
+end proc
+
+destructors
+proc destroy_list(in/out L:list of T)
+	if (not is_empty_list(L)) then
+		var killme = pointer to (node of T)
+		var current = pointer to (node of T)
+		current = L->first
+		while (current != NULL) do
+			killme = current
+			current = current->next
+			free(killme)
+		od
+		L->first = NULL
+		L->last = NULL
+	fi
+en proc
+
+copy /*version 1*/
+{-PRE:not is_empty_list(L)-}
+fun copy_list(L:list of T) ret cL:list of T
+	var new: pointer to (node of T)
+	var current: pointer to (node of T)
+
+	cL = empty_list()
+	current = L->first
+	/*copio el primer elemento de L*/
+	alloc(new)
+	new->elem = current->elem
+	new->next = NULL
+	new->prev = NULL
+	/*agrego ese primer elemento en la nueva lista*/
+	cL->first = new
+	cL->last = new
+	/*paso al siguiente elemento de L*/
+	current = current->next
+	while (current != NULL) do
+		var temp: pointer to (node of T)
+		alloc(temp)
+		temp->elem = current->elem
+		temp->next = NULL
+		temp->prev = cL->last
+		cL->last->next = temp
+		cL->last = temp
+		current = current-next
+	od
+	free(temp)
+	temp = NULL
+	free(new)
+	new = NULL
+end fun
+
+copy /*version2*/
+fun copy_list(L:list of T) ret cL:list of t
+	cL = empty_list()
+	var current: pointer to (node of T)
+	current = L->first
+	while (current != NULL) do
+		addright(cL, current->elem)
+		current = current->next
+	od
+end fun
+
+operations
+fun is_empty_list(L:list of T) ret res:bool
+	res = (L->first == NULL && L->last == NULL)
+end fun
+
+{-PRE:not is_empty_list(L)-}
+fun firt_elem(L:list of T) ret elem:T
+	elem = L-first->elem
+end fun
+
+{-PRE:not is_empty_list(L)-}
+fun last_elem(L:list of T) ret elem:T
+	elem = L->last->elem
+end fun
+
+{-PRE:not is_empty_list(L)-}
+proc deletefirst(in/out L:list of T)
+	var killme: pointer to (node of T)
+	killme = L->first
+	L->first = L->first->prev
+	free(killme)
+	killme = NULL
+end proc
+
+{-PRE:not is_empty_list(L)-}
+proc deleteLast(L:list of T)
+	var killme: pointer to (node of T)
+	killme = L->last
+	L->last = L->last->prev
+	L->last->next = NULL
+	free(killme)
+	killme = NULL
+	if(L->first == NULL)then
+		L-last = NULL
+	if
+end proc
+
+fun length_list(L:list of T) ret num:nat
+	var copy: list of t
+	copy = empty_list()
+	num = 0
+	while (not is_empty_list(copy)) do
+		copy = deletefirst(copy)
+		num = num +1
+	od
+end fun
+
+{-PRE:not is_empty_list(L)-}
+proc addright(in/out L:list of T, in elem:T)
+	var new: pointer to (node of T)
+	alloc(new)
+	new->elem = elem
+	new->next = NULL
+	new->prev = L->last
+	L->last->next = new
+	L->last = new
+end proc
+
+--c
+
+proc invertirLista(in/out L:list of nat)
+	var copy:list of nat
+	copy = empty_list()
+	copy copy_list(L)
+	while (not is_empty_list(copy)) do
+		deletefirst(L)
+		addr(L, last_elem(copy))
+		deleteLast(copy)
+	od
+	destroy_list(copy)
+end proc
+
+/*quinto ejercicio*/
+Tienes una inmensa base de registros con datos  de los cientos de miles de 
+afiliados a una obra social ordenada alfabeticamente segun sus nombres. 
+Todos los dias se agregan unas decenas de nuevos afiliados.
+Sus registros se agregan al fial, y encontces la base no queda perfectamente 
+ordenada.
+Se decide correr, cada noche, un algoritmo de ordenacion para restablecer el 
+orden para el dia siguiente.
+
+Cual/es de los algoritmos de ordenacion seria/n mas apropiados para utilizar 
+en este cas? Porque?
+
+Insertion_sort si los nuevos afiliados están parcialmente ordenados, puesto 
+que mientras más ordenado este la base mejor para este algoritmo, si los nuevos 
+afiliados están completamente desordenados, es mejor usar quick_sort dado que al
+separar todos los menores de un lado y todos los mayores de otro logra un mejor 
+ordenamiento que estar intercalando ambas mitades.
