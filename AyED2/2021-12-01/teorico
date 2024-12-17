@@ -1,0 +1,155 @@
+/*Primer ejercicio*/
+/*Algortimos voraces*/
+Un amigo te recomienda que entres en el mundo del trading de criptomonedas asegurándote
+que siempre vas a ganar, ya que tiene una bola de cristal que ve el futuro.
+Conocés el valor actual v0_1, . . . , v0_n de n criptomonedas. 
+La bola de cristal indica el valor que tendrá cada una de las
+criptomonedas durante los m días siguientes. 
+Es decir, los valores v1_1, . . . , vm_1 que tendrá la criptomoneda 1 dentro
+de 1 día, . . . , dentro de m días respectivamente; 
+los valores v1_2, . . . , vm_2 que tendrá la criptomoneda 2 dentro de 
+1 día, . . . , dentro de m días respectivamente, etcétera. 
+En general, vj_i es el valor que tendrá la criptomoneda i dentro de j días.
+
+Con esta preciada información podés diseñar un algoritmo que calcule el máximo 
+dinero posible a obtener al cabo de m días comprando y vendiendo criptomonedas, 
+a partir de una suma inicial de dinero D.
+Se asume que siempre habrá suficiente cantidad de cada criptomoneda para comprar
+y que no se cobra comisión alguna por la compra y venta. 
+También se asume que se pueden comprar fracciones de criptomonedas. 
+Recordar que no siempre las criptomonedas incrementan su valor.
+Se pide lo siguiente:
+(a) Indicar de manera simple y concreta, 
+cuál es el criterio de selección voraz para construir la solución?
+(b) Indicar qué estructuras de datos utilizarás para resolver el problema.
+(c) Explicar en palabras cómo resolverá el problema el algoritmo.
+(d) Implementar el algoritmo en el lenguaje de la materia de manera precisa.
+
+--a
+el criterio de seleccion voraz para la solucion sera:
+elegir la cripto con mejor ganancia
+
+--b
+//datos de bola magica
+type cripto = tuple
+                id : nat
+                cantidad: float
+                precio[1...m]: of float
+            end tuple
+
+type select_cripto = tuple
+                    id :nat
+                    cantidad: float
+                    diaPrecioMin: nat
+                    diaPrecioMax: nat
+                    precioCompra: float
+                    precioVenta: float
+                end tuple
+
+--c
+se hara una revision de cada cripto encontrando el dia donde su precio es:
+mas bajo con ello luego calcular la mejor ganancia
+Armar una lista con las cripto de mejor ganancia para luego depende de cada dia
+de proceder a comprar o vender, de esta manera conseguir nuestro maximo dinero
+posible
+
+--d
+implement  
+
+fun cryptomania (C:Set of cripto, D:float, dias:nat) ret money:float
+    --variables
+    copy: Set of cripto
+    listaDeCompras: list of select_cripto
+    cryptom:select_cripto
+    dia:nat
+
+    --iniciar variables
+    copy := copy_set(C)
+    listaDeCompras := empty_list()
+    dia := 1
+    
+    --ejecucion
+    clean(copy, dias)   //eliminar criptos que no generaran ganancias
+    while (not is_empty_set(copy)) 
+        cryptom := select_criptomania(copy, dia, dias)   //devuelve cripto de mejor ganancia
+        addr(listaDeCompras, cryptom)       //guardo cada cripto de mejor ganancia en una lista
+        elim(copy, cryptom)
+    od
+    for dia to dias do
+        //si tengo dinero comprar criptos
+
+        //si llega un dia de venta de las criptos que compre, venderlas
+
+        //devolver el dinero conseguido (deberia ser el max dinero posible)
+
+    --liberacion
+
+end fun
+
+fun select_criptomania(C:Set of cripto, dia, dias) ret cryptom:select_cripto
+    --variables
+    copy:Set of cripto
+    auxMinP:float
+    auxMaxP:float
+    auxGananciaMax:float
+
+    --iniciar variables
+    copy := copy_set(C)
+    auxMaxP := -inf
+    auxGananciaMax := -inf
+
+    --ejecucion
+    while (not is_empty_set(copy)) do
+        crip := get(copy)
+        auxMinP := inf      //reinicio valor de auxMinP
+
+        // encontrar precio minimo y su dia
+        for i = dia to dias do
+            if(crip.precio[i]*dia < auxMinP)
+                auxMinP := crip.precio[i]
+                cryptom.id := crip.id
+                cryptom.cantidad := crip.cantidad
+                cryptom.diaPrecioMin := i
+                cryptom.precioCompra := crip.precio[i]
+            fi
+        od
+
+        //encontrar precio maximo posterior al precio minimo
+        for i =cryptom.diaPrecioMin to dias do
+            if(crip.precio[i] - auxMinP > auxGananciaMax)
+                auxGananciaMax := crip.precio[i] - auxMinP
+                cryptom.precioVenta := crip.precio[i]
+                cryptom.diaPrecioMax := i
+
+        od
+        elim(copy, crip)
+    od
+    --liberacion
+    destroy_set(copy)
+end fun
+
+proc clean(in/out C:Set of cripto, in dias:nat)
+    --variables
+    copy:Set of cripto
+    cryptom:cripto
+
+    --iniciar variables
+    copy := copy_set(C)
+
+    --ejecucion
+    while (not is_empty_set(copy)) do
+        cryptom := get(copy)
+        for i = 1 to dias-1 do
+            if (crypton.precio[i] >= crypton.precio[i+1]) then
+                skip
+            else
+                break
+            fi
+            elim(C, cryptom)
+        od
+        elim(copy, cryptom)
+    od
+
+    --liberacion
+    destroy_set(copy)
+end proc
