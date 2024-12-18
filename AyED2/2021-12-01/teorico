@@ -153,3 +153,358 @@ proc clean(in/out C:Set of cripto, in dias:nat)
     --liberacion
     destroy_set(copy)
 end proc
+
+/*Segundo ejercicio*/
+Finalmente tenés la posibilidad de irte N días (con sus respectivas noches) de
+vacaciones y en el recorrido que armaste, cada día/noche i estarás en una ciudad Ci.
+Contás con M pesos en total de presupuesto para gastar en alojamiento y para 
+cada ciudad conocés el costo ki por noche del único hotel que tiene.
+
+Cada noche i podés elegir entre dormir en el hotel de la ciudad, lo que te 
+costará ki, o dormir en una carpa que llevaste, que te cuesta 0.
+
+Además, tenés una tabla que indica para cada ciudad i, la puntuación pi del hotel.
+
+Se debe encontrar la máxima puntuación obtenible eligiendo en qué ciudades 
+dormirás en hotel, de manera tal que el presupuesto total gastado no supere el monto M. 
+
+Notar que si decidís dormir en carpa en alguna ciudad, 
+la puntuación correspondiente para la misma será 0.
+
+(Backtracking) Resolvé el problema utilizando la técnica de backtracking 
+dando una función recursiva. Para ello:
+
+(a) Especificar precisamente qué calcula la función recursiva que resolverá el problema, 
+indicando qué argumentos toma y la utilidad de cada uno.
+(b) Da la llamada o la expresión principal que resuelve el problema.
+(c) Definir la función en notación matemática.
+
+N dias (con respectivas noches)
+dia/noche i ciudad C_i
+M pesos 
+costo k_i la noche si duermo en hotel
+costo 0 la noche si duermo en mi carpa
+
+--a
+maxPuntuacion(d,c,m) = "maxima puntuacion al pasar d dias de vacaciones en el hotel de c ciudades, sin superar el dinero m"
+d = dias
+c = ciudad
+m = money
+
+--b
+la expresion principal = maxPuntuacion(N,C,M)
+
+--c
+notacion matematica = 
+maxPuntuacion(d,c,m) =
+1. tengo dias, tengo ciudades, tengo dinero
+2. tengo dias, no tengo ciudades, tengo dinero
+3. tengo dias, no tengo ciudades, no tengo dinero
+4. tengo dias, tengo ciudades, no tengo dinero
+5. no tengo dias, tengo ciudades, tengo dinero
+6. no tengo dias, tengo ciudades, no tengo dinero
+7. no tengo dias, no tengo ciudades, tengo dinero
+8. no tengo dias, no tengo ciudades, no tengo dinero
+
+5,6,7,8 son 0
+2,3 son 0 ya que tampoco tengo ciudad donde ir asi que no se conseguira puntaje.
+
+4  
+si m < k_c (donde k_c es el costo en el hotel, no puedo dormir en hotel)
+maxPuntuacion(d-1,c-1,m)
+1 
+si m >= k_c (donde k_c es el costo en el hotel. puedo dormir en hotel o no)
+max(a_c + maxPuntuacion(d-1, c-1, m-k_c), maxPuntuacion(d-i,c-i,m))
+
+entonces en limpio:
+maxPuntuacion(d,c,m) =
+si d = 0 or c = 0    0
+si m < k_c           maxPuntuacion(d-1,c-1,m)
+si m >= k_c          max(a_c + maxPuntuacion(d-1,c-1,m-k_c), maxPuntuacion(d-1,c-1,m))
+
+
+/*Tercer Ejercicio*/
+(Programación dinámica) 
+Implementá un algoritmo que utilice Programación Dinámica para resolver el problema.
+(a) Qué dimensiones tiene la tabla que el algoritmo debe llenar?
+(b) En qué orden se llena la misma?
+(c) Se podría llenar de otra forma? En caso afirmativo indique cuál.
+
+fun maxPuntuacion(N:nat, C:nat, M:float, costos:array[1...k], puntuacion[1...p]) ret puntuacion:float
+    aux:array[0...N,0...C,0...M] of nat
+
+    {-casos base-}
+    for i = 0 to N do
+        for j = 0 to C do
+            for m = 0 to M do
+                aux[i, j, m] = 0
+            od
+        od
+    od
+
+    {-caso recursivo-}
+    for i = 1 to N do
+        for j = 1 to C do
+            for m = 0 to M do 
+                if(costos[j-1] <= m)
+                    aux[i,j,m] = max(puntuacion[j-1] + aux(i-1,j-1,m - costos[c-1]), 
+                                    aux(i-1, j-1, m))
+                else
+                    aux[i,j,m] = aux(i-1,j-1,m)
+                fi
+            od
+        od
+    od
+    puntuacion = aux[N,C,M]
+end fun
+
+--a
+tiene 3 dmensiones
+
+--b
+de izquierda a derecha de arriba abajo
+
+--c
+se podria pero no se recomienda.
+
+
+/*Cuarto ejercicio*/
+Para cada uno de los siguientes algoritmos determinar por separado cada uno de los siguientes incisos.
+
+fun s(p: array[1..n] of nat, v,w: nat) ret y: nat
+    y:= v
+    for i := v+1 to w do
+        if p[i] < p[y] then 
+            y:= i
+        fi
+    od
+end fun
+--[1,7,3,5,2,4,6]
+v = 3 
+w = 7
+5 < 3 no, sigue igual
+2 < 3 si, actualiza y
+4 < 2 no, sigue igual
+6 < 2
+(a) Qué hace? Cuáles son las precondiciones necesarias para haga eso?
+devuelve el indice del menor elemento
+{Pre:n>=2; v,w < n; v < w}
+(b) Cómo lo hace?
+recorre un arreglo entre 2 limites dados, con ello analiza donde se cumple que un elemento sea menor que otro  y guarda esa posicion y la toma como punto de comparacion por si aun quedan mas elementos en el arreglo y lo sigue recorriendo hasta que analiza todos y devolvera el menor de todos ellos
+(c) El orden del algoritmo, analizando los distintos casos posibles.
+es de orden n
+(d) Proponer nombres más adecuados para los identificadores (de variables, funciones y procedimientos).
+s = minElem
+
+/*----------------------------------------------------------------------------*/
+
+fun t(p: array[1..n] of nat, v,w: nat) ret y: nat
+    y:= v
+    for i := v+1 to w do
+        if p[y] < p[i] then 
+            y:= i
+        fi
+    od
+end fun
+--[1,7,3,5,2,4,6]
+v = 3 
+w = 7
+3 < 5 si, actualiza y 
+5 < 2 no, sigue igual
+5 < 4 no, sigue igual
+5 < 6 si, actualia y
+(a) Qué hace? Cuáles son las precondiciones necesarias para haga eso?
+devuelve el indice del mayor elemento.
+{Pre:n>=2; v,w < n; v < w}
+(b) Cómo lo hace?
+recorre un arreglo entre 2 limites dados, con ello analiza donde se cumple que un elemento sea menor que otro  y guarda esa posicion y la toma como punto de comparacion por si aun quedan mas elementos en el arreglo y lo sigue recorriendo hasta que analiza todos y devolvera el mayor de todos ellos
+(c) El orden del algoritmo, analizando los distintos casos posibles.
+es de orden n
+(d) Proponer nombres más adecuados para los identificadores (de variables, funciones y procedimientos).
+t = maxElem
+
+/*----------------------------------------------------------------------------*/
+
+proc r(p: array[1..n] of nat)
+    for i := 1 to n div 2 do
+        swap(p, i, s(p, i, n-i+1));
+        swap(p, n-i+1, t(p, i+1, n-i+1));
+    od
+end fun
+--[1,7,3,5,2,4,6]
+
+(a) Qué hace? ¾Cuáles son las precondiciones necesarias para haga eso?
+ordena parcialmente un arreglo con menores a la izquierda y mayores a la derecha
+(b) Cómo lo hace?
+en un bucle y usando las funciones de intercambio, primero intercambia un minElem lo mas a la izquierda posible, luego un maxElem lo mas a la derecha posible asi en un bucle hasta que lo termine
+(c) El orden del algoritmo, analizando los distintos casos posibles.
+el orden es n2
+(d) Proponer nombres más adecuados para los identificadores (de variables, funciones y procedimientos).
+r = ordenarParcialmente
+/*----------------------------------------------------------------------------*/
+
+/*quinto ejercicio*/
+Considere la siguiente especificación del tipo Listas de algún tipo T.
+
+spec List of T where
+constructors
+    fun empty() ret l : List of T
+    {- crea una lista vacía. -}
+    proc addl (in e : T, in/out l : List of T)
+    {- agrega el elemento e al comienzo de la lista l. -}
+destroy
+    proc destroy (in/out l : List of T)
+    {- Libera memoria en caso que sea necesario. -}
+operations
+    fun is_empty(l : List of T) ret b : bool
+    {- Devuelve True si l es vacía. -}
+    fun head(l : List of T) ret e : T
+    {- Devuelve el primer elemento de la lista l -}
+    {- PRE: not is_empty(l) -}
+    proc tail(in/out l : List of T)
+    {- Elimina el primer elemento de la lista l -}
+    {- PRE: not is_empty(l) -}
+    proc addr (in/out l : List of T,in e : T)
+    {- agrega el elemento e al final de la lista l. -}
+    fun length(l : List of T) ret n : nat
+    {- Devuelve la cantidad de elementos de la lista l -}
+    proc concat(in/out l : List of T,in l0 : List of T)
+    {- Agrega al final de l todos los elementos de l0
+    en el mismo orden.-}
+    fun index(l : List of T,n : nat) ret e : T
+    {- Devuelve el n-ésimo elemento de la lista l -}
+    {- PRE: length(l) > n -}
+    proc take(in/out l : List of T,in n : nat)
+    {- Deja en l sólo los primeros n
+    elementos, eliminando el resto -}
+    proc drop(in/out l : List of T,in n : nat)
+    {- Elimina los primeros n elementos de l -}
+    fun copy_list(l1 : List of T) ret l2 : List of T
+    {- Copia todos los elementos de l1 en la nueva lista l2 -}
+
+(a) Utilizando como representación:
+un arreglo de N elementos de tipo T y un natural, definí la estructura que representa la lista, implementá los constructores y las operaciones tail, concat, length y drop.
+
+type list of T = tuple
+                    a:array[] of T
+                    size: nat
+                end tuple
+
+contructors
+    {- crea una lista vacía. -}
+    fun empty() ret l : List of T
+        l.size := 0;
+        l.a[] := 0   
+    end fun
+
+    {- agrega el elemento e al comienzo de la lista l. -}
+    proc addl (in e : T, in/out l : List of T)
+        if (is_empty(l)) then
+            l.size = 1
+            l.a[l.size] = e
+        else
+            var copy:list of T
+            copy := copy_list(l)
+            l.size := l.size + 1
+            l.a[1] := e
+            for i = 2 to l.size
+                l.a[i] = copy.a[i-1]
+            od
+        fi
+    en proc
+
+operations
+    {- PRE: not is_empty(l) -}
+    {- Elimina el primer elemento de la lista l -}
+    proc tail(in/out l : List of T)
+        var copy:list of T
+        copy := copy_list(l)
+        l.size = l.size - 1;
+
+        for i = 1 to l.size
+            l.a[i] := copy.a[i+1]
+        od
+    end proc
+
+    {- Agrega al final de l todos los elementos de l0
+    en el mismo orden.-}
+    proc concat(in/out l : List of T,in l0 : List of T)
+        for i = i to l0.size od
+            l.size = l.size + 1
+            l.a[l.size] = l0.[i]
+        od
+    end proc
+
+    {- Devuelve la cantidad de elementos de la lista l -}
+    fun length(l : List of T) ret n : nat
+        n = l.size
+    end fun
+
+    {-PRE: n <= l.size-}
+    {- Elimina los primeros n elementos de l -}
+    proc drop(in/out l : List of T,in n : nat)
+        var aux:nat
+        var copy:list of T
+
+        aux := l.size
+        copy := copy_list(l)
+
+        l.size = 1
+        for i = n + 1 to aux
+            l.a[l.size] := copy.a[i]
+            l.size := l.size + 1 
+    end proc
+
+(b) La representación elegida para implementar el tad tiene alguna limitación? 
+En caso afirmativo indicá cuál es.
+la limitacion que presenta es por su tamaño que es fijo y no dinamico causando qe no permita añadir elementos mas alla de sus limites.
+
+Alguna operación debe tener una precondición extra?
+si, la operacion drop, esta requiere que el n que queremos eliminar sea <= que el tamaño de l.
+
+(c) Qué orden tiene la operación tail implementada en el inciso anterior? 
+la operacion tail que implemente tiene orden n.
+
+Se podría modificar la estructura de datos utilizada para que tail sea constante? Explicá cómo.
+se podria convertir en constante haciendo cambio en la estructura usada de la siguiente manera:
+
+type Node of T = tuple
+    value: T              -- Valor del nodo.
+    next: Node of T       -- Puntero al siguiente nodo.
+end tuple
+
+type List of T = tuple
+    head: Node of T       -- Puntero al primer nodo.
+    size: nat             -- Número de elementos en la lista.
+end tuple
+
+entonces la operacion quedaria:
+{- PRE: not is_empty(l) -}
+proc tail(in/out l: List of T)
+    l.head := l.head.next -- Avanza el puntero al siguiente nodo.
+    l.size := l.size - 1  -- Decrementa el tamaño de la lista.
+end proc
+
+(d) Implementá una función que reciba dos listas de enteros y devuelva otra lista que contenga en las posiciones
+pares todos los elementos de la primera lista (en el mismo orden), y en las posiciones impares todos los
+elementos de la segunda lista (en el mismo orden).
+Para ello utilizá el tipo abstracto, sin acceder a su representación interna.
+
+fun mezcla(l1, l2: list of T) ret l3: list ot T
+    var len:list of T
+
+    len := empty_list()
+    l3 := empty_list()
+    concat(len, l1)
+    concat(len, l2)
+    
+    for i = 1 to length(len) do
+        if (i mod 2 == 0)
+            addr(l3, head(l2))
+            tail(l2)
+        else
+            addr(l3, head(l1))
+            tail(l1)
+        fi
+    od
+end fun
