@@ -62,3 +62,10 @@ $(TARGET): $(OBJECTS)
 
 clean:
 	$(RM) $(OBJECTS) $(TARGET)
+
+gdb-test: $(TARGET)
+	@echo "run" > gdb_commands.txt
+	@echo "backtrace" >> gdb_commands.txt
+	@echo "quit" >> gdb_commands.txt
+	gdb -x gdb_commands.txt ./$(TARGET)
+	rm gdb_commands.txt
