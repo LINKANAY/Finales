@@ -1,0 +1,71 @@
+#Ejercicio 1
+Se desea realizar un viaje en un autom ́ovil con autonom ́ıa A (en kil ́ometros), desde la localidad l0 hasta la
+localidad ln pasando por las localidades l1, . . . , ln−1 en ese orden. Se conoce cada distancia di ≤ A entre
+la localidad li−1 y la localidad li (para 1 ≤ i ≤ n), y se sabe que existe una estaci ́on de combustible en
+cada una de las localidades.
+Escribir un algoritmo que compute el menor n ́umero de veces que es necesario cargar combustible para
+realizar el viaje, y las localidades donde se realizar ́ıa la carga.
+Suponer que inicialmente el tanque de combustible se encuentra vac ́ıo y que todas las estaciones de servicio
+cuentan con suficiente combustible.
+
+#Ejercicio 2
+En numerosas oportunidades se ha observado que cientos de ballenas nadan juntas hacia la costa y quedan
+varadas en la playa sin poder moverse. Algunos sostienen que se debe a una p ́erdida de orientaci ́on
+posiblemente causada por la contaminaci ́on sonora de los oc ́eanos que interferir ́ıa con su capacidad de
+inter-comunicaci ́on. En estos casos los equipos de rescate realizan enormes esfuerzos para regresarlas al
+interior del mar y salvar sus vidas.
+Se encuentran n ballenas varadas en una playa y se conocen los tiempos s1, s2, . . . , sn que cada ballena
+es capaz de sobrevivir hasta que la asista un equipo de rescate. Dar un algoritmo voraz que determine el
+orden en que deben ser rescatadas para salvar el mayor n ́umero posible de ellas, asumiendo que llevar una
+ballena mar adentro toma tiempo constante t, que hay un  ́unico equipo de rescate y que una ballena no
+muere mientras est ́a siendo regresada mar adentro.
+
+#Ejercicio 3
+Sos el flamante due ̃no de un tel ́efono satelital, y se lo ofrec ́es a tus n amigos para que lo lleven con
+ellos cuando salgan de vacaciones el pr ́oximo verano. Lamentablemente cada uno de ellos ir ́a a un lugar
+diferente y en algunos casos, los per ́ıodos de viaje se superponen. Por lo tanto es imposible prestarle el
+tel ́efono a todos, pero quisieras prest ́arselo al mayor n ́umero de amigos posible.
+Suponiendo que conoces los d ́ıas de partida y regreso (pi y ri respectivamente) de cada uno de tus amigos,
+¿cu ́al es el criterio para determinar, en un momento dado, a quien conviene prestarle el equipo?
+Tener en cuenta que cuando alguien lo devuelve, reci ́en a partir del d ́ıa siguiente puede usarlo otro. Escribir
+un algoritmo voraz que solucione el problema.
+
+#Ejercicio 4
+Para obtener las mejores facturas y medialunas, es fundamental abrir el horno el menor n ́umero de veces
+posible. Por supuesto que no siempre es f ́acil ya que no hay que sacar nada del horno demasiado temprano,
+porque queda cruda la masa, ni demasiado tarde, porque se quema.
+En el horno se encuentran n piezas de panader ́ıa (facturas, medialunas, etc). Cada pieza i que se encuentra
+en el horno tiene un tiempo m ́ınimo necesario de cocci ́on ti y un tiempo m ́aximo admisible de cocci ́on Ti
+.
+Si se la extrae del horno antes de ti quedar ́a cruda y si se la extrae despu ́es de Ti se quemar ́a.
+Asumiendo que abrir el horno y extraer piezas de  ́el no insume tiempo, y que ti ≤ Ti para todo i ∈
+{1, . . . , n}, ¿qu ́e criterio utilizar ́ıa un algoritmo voraz para extraer todas las piezas del horno en perfecto
+estado (ni crudas ni quemadas), abriendo el horno el menor n ́umero de veces posible? Implementarlo.
+
+#Ejercicio 5
+Un submarino averiado descansa en el fondo del oc ́eano con n sobrevivientes en su interior. Se conocen las
+cantidades c1, . . . , cn de ox ́ıgeno que cada uno de ellos consume por minuto. El rescate de sobrevivientes
+se puede realizar de a uno por vez, y cada operaci ́on de rescate lleva t minutos.
+(a) Escribir un algoritmo que determine el orden en que deben rescatarse los sobrevivientes para salvar
+al mayor n ́umero posible de ellos antes de que se agote el total C de ox ́ıgeno.
+(b) Modificar la soluci ́on anterior suponiendo que por cada operaci ́on de rescate se puede llevar a la
+superficie a m sobrevivientes (con m ≤ n).
+
+#Ejercicio 6
+Usted vive en la monta ̃na, es invierno, y hace mucho fr ́ıo. Son las 10 de la noche. Tiene una voraz estufa
+a le ̃na y n troncos de distintas clases de madera. Todos los troncos son del mismo tama ̃no y en la estufa
+entra solo uno por vez. Cada tronco i es capaz de irradiar una temperatura ki mientras se quema, y
+dura una cantidad ti de minutos encendido dentro de la estufa. Se requiere encontrar el orden en que
+se utilizar ́an la menor cantidad posible de troncos a quemar entre las 22 y las 12 hs del d ́ıa siguiente,
+asegurando que entre las 22 y las 6 la estufa irradie constantemente una temperatura no menor a K1; y
+entre las 6 y las 12 am, una temperatura no menor a K2.
+
+
+#Ejercicio 7
+(sobredosis de limonada) Es viernes a las 18 y usted tiene ganas de tomar limonada con sus amigos. Hay
+n bares cerca, donde cada bar i tiene un precio Pi de la pinta de limonada y un horario de happy hour Hi,
+medido en horas a partir de las 18 (por ejemplo, si el happy hour del bar i es hasta las 19, entonces Hi
+= 1), en el cual la pinta costar ́a un 50% menos. Usted toma una cantidad fija de 2 pintas por hora y no
+se considera el tiempo de moverse de un bar a otro. Se desea obtener el menor dinero posible que usted
+puede gastar para tomar limonada desde las 18 hasta las 02 am (es decir que usted tomar ́a 16 pintas)
+eligiendo en cada hora el bar que m ́as le convenga.

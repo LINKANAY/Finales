@@ -1,0 +1,88 @@
+#Ejercicio 1
+Implementar el TAD Pila utilizando la siguiente representacion:
+implement Stack of T where
+type Stack of T = List of T
+
+#Ejercicio 2
+Implementar el TAD Pila utilizando la siguiente representacion:
+implement Stack of T where
+type Node of T = tuple
+                    elem : T
+                    next : pointer to (Node of T)
+                end tuple
+
+type Stack of T = pointer to (Node of T)
+
+#Ejercicio 3
+(a) Implementar el TAD Cola utilizando la siguiente representacion, donde N es una constante de tipo nat:
+implement Queue of T where
+type Queue of T = tuple
+                    elems : array[0..N-1] of T
+                    size : nat
+                end tuple
+
+(b) Implementar el TAD Cola utilizando un arreglo como en el inciso anterior, pero asegurando que
+todas las operaciones esten implementadas en orden constante.
+Ayuda1: Quizas convenga agregar algun campo mas a la tupla. ¿Estamos obligados a que el
+primer elemento de la cola este representado con el primer elemento del arreglo?
+Ayuda2: Buscar en Google aritmetica modular.
+
+
+#Ejercicio 4
+Completar la implementacion del tipo Arbol Binario dada en el teorico, donde utilizamos la siguiente  ́
+representacion:
+implement Tree of T where
+type Node of T = tuple
+                    left: pointer to (Node of T)
+                    value: T
+                    right: pointer to (Node of T)
+                end tuple
+
+type Tree of T= pointer to (Node of T)
+
+
+#Ejercicio 5
+Un Diccionario es una estructura de datos muy utilizada en programacion. Consiste de una coleccion
+de pares (Clave,Valor), a la cual le puedo realizar las operaciones:
+• Crear un diccionario vacio.
+• Agregar el par consistente de la clave k y el valor v. En caso que la clave ya se encuentre en el
+diccionario, se reemplaza el valor asociado por v.
+• Chequear si un diccionario es vacio.
+• Chequear si una clave se encuentra en el diccionario.
+• Buscar el valor asociado a una clave k. Solo se puede aplicar si la misma se encuentra.
+• Una operacion que dada una clave k, elimina el par consistente de k y el valor asociado. Solo se
+puede aplicar si la clave se encuentra en el diccionario.
+• Una operacion que devuelve un conjunto con todas las claves contenidas en un diccionario.
+
+(a) Especificar el TAD diccionario indicando constructores y operaciones.
+spec Dict of (K,V) where donde K y V pueden ser cualquier tipo, asegurando que K tenga definida una funcion que chequea igualdad.
+(b) Implementar el TAD diccionario utilizando la siguiente representacion:
+implement Dict of (K,V) where
+type Node of (K,V) = tuple
+                        left: pointer to (Node of (K,V))
+                        key: K
+                        value: V
+                        right: pointer to (Node of (K,V))
+                    end tuple
+
+type Dict of (K,V)= pointer to (Node of (K,V))
+
+Como invariante de representacion debemos asegurar que el arbol representado por la estructura
+sea binario de busqueda de manera que la operacion de buscar un valor tenga orden logaritmico.
+Es decir, dado un nodo n, toda clave ubicada en el nodo de la derecha n.right, debe ser mayor o
+igual a n.key. Y toda clave ubicada en el nodo de la izquierda n.left, debe ser menor a n.key.
+Debes tener especial cuidado en la operacion que agrega pares al diccionario.
+
+#Ejercicio 6
+En un ABB cuyos nodos poseen valores entre 1 y 1000, interesa encontrar el numero 363. ¿Cuales
+de las siguientes secuencias no puede ser una secuencia de nodos examinados segun el algoritmo de
+busqueda? ¿Por que?
+(a) 2, 252, 401, 398, 330, 344, 397, 363.
+(b) 924, 220, 911, 244, 898, 258, 362, 363.
+(c) 925, 202, 911, 240, 912, 245, 363.
+(d) 2, 399, 387, 219, 266, 382, 381, 278, 363.
+(e) 935, 278, 347, 621, 299, 392, 358, 363.
+
+#Ejercicio 7
+Dada la secuencia de numeros 23, 35, 49, 51, 41, 25, 50, 43, 55, 15, 47 y 37, determinar el ABB que resulta
+al insertarlos exactamente en ese orden a partir del ABB vacio.

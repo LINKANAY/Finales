@@ -1,0 +1,82 @@
+#Ejercicio 1
+Escribir un algoritmo que dada una matriz a: array[1..n,1..m] of int calcule el elemento minimo.
+Escribir otro algoritmo que devuelva un arreglo array[1..n] con el minimo de cada fila de la matriz a.
+
+#Ejercicio 2
+Dados los tipos enumerados
+type mes = enumerate
+            enero
+            febrero
+            ...
+            diciembre
+        end enumerate
+
+type clima = enumerate
+                Temp
+                TempMax
+                TempMin
+                Pres
+                Hum
+                Prec
+            end enumerate
+
+El arreglo med:array[1980..2016,enero..diciembre,1..28,Temp..Prec] of nat es un arreglo multidimen-
+sional que contiene todas las mediciones estadisticas del clima para la ciudad de Cordoba desde el 
+1/1/1980 hasta el 28/12/2016. 
+Por ejemplo, med[2014,febrero,3,Pres] indica la presion atmosferica que se registro el dia 3 de febrero de 2014. Todas las mediciones est ́an expresadas con numeros enteros. 
+Por simplicidad asumiremos que todos los meses tienen 28 dias.
+(a) Dar un algoritmo que obtenga la menor temperatura minima (TempMin) hist ́orica registrada en
+la ciudad de C ́ordoba seg ́un los datos del arreglo.
+(b) Dar un algoritmo que devuelva un arreglo que registre para cada a ̃no entre 1980 y 2016 la mayor
+temperatura m ́axima (TempMax) registrada durante ese a ̃no.
+(c) Dar un algoritmo que devuelva un arreglo que registre para cada a ̃no entre 1980 y 2016 el mes
+de ese a ̃no en que se registr ́o la mayor cantidad mensual de precipitaciones (Prec).
+(d) Dar un algoritmo que utilice el arreglo devuelto en el inciso anterior (adem ́as de med) para
+obtener el a ̃no en que ese m ́aximo mensual de precipitaciones fue minimo (comparado con los de
+otros a nos).
+(e) Dar un algoritmo que obtenga el mismo resultado sin utilizar el del inciso (c).
+
+#Ejercicio 3
+Dado el tipo
+type person = tuple
+                name: string
+                age: nat
+                weight: nat
+            end tuple
+
+(a) escribir un algoritmo que calcule la edad y peso promedio de un arreglo a : array[1..n] of person.
+(b) escribir un algoritmo que ordene alfabeticamente dicho arreglo.
+
+#Ejercicio 4
+Dados dos punteros p, q : pointer to int
+(a) escribir un algoritmo que intercambie los valores referidos sin modificar los valores de p y q.
+(b) escribir otro algoritmo que intercambie los valores de los punteros.
+Sea un tercer puntero r : pointer to int que inicialmente es igual a p, y asumiendo que inicialmente
+∗p = 5 y ∗q = -4 ¿cuales serian los valores de ∗p, ∗q y ∗r luego de ejecutar el algoritmo en cada uno
+de los dos casos?
+
+#Ejercicio 5
+Dados dos arreglos a, b : array[1..n] of nat se dice que a es “lexicograficamente menor” que b sii
+existe k ∈ {1 . . . n} tal que a[k] < b[k], y para todo i ∈ {1 . . . k − 1} se cumple a[i] = b[i]. 
+En otras palabras, si en la primera posicion en que a y b difieren, el valor de a es menor que el de b. 
+Tambien se dice que a es “lexicograficamente menor o igual” a b sii a es lexicograficamente menor que b o a es
+igual a b.
+(a) Escribir un algoritmo lex less que recibe ambos arreglos y determina si a es lexicogr ́aficamente menor que b.
+
+(b) Escribir un algoritmo lex less or equal que recibe ambos arreglos y determina si a es lexicograficamente menor o igual a b.
+
+(c) Dado el tipo enumerado
+type ord = enumerate
+            igual
+            menor
+            mayor
+        end enumerate
+Escribir un algoritmo lex compare que recibe ambos arreglos y devuelve valores en el tipo ord.
+¿Cual es el inter ́es de escribir este algoritmo?
+
+#Ejercicio 6
+6. Escribir un algoritmo que dadas dos matrices a, b: array[1..n,1..m] of nat devuelva su suma.
+
+#Ejercicio 7
+7. Escribir un algoritmo que dadas dos matrices a: array[1..n,1..m] of nat y b: array[1..m,1..p] of nat
+devuelva su producto.

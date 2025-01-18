@@ -1,0 +1,54 @@
+#Ejercicio 1
+Una panaderia recibe n pedidos por importes m1, . . . , mn, pero solo queda en deposito una cantidad
+H de harina en buen estado. Sabiendo que los pedidos requieren una cantidad h1, . . . , hn de harina
+(respectivamente), determinar el m ́aximo importe que es posible obtener con la harina disponible.
+
+#Ejercicio 2
+4. Usted se encuentra en un globo aerost ́atico sobrevolando el oc ́eano cuando descubre que empieza a
+perder altura porque la lona est ́a levemente da ̃nada. Tiene consigo n objetos cuyos pesos p1, . . . , pn
+y valores v1, . . . , vn conoce. Si se desprende de al menos P kilogramos lograr ́a recuperar altura y
+llegar a tierra firme, y afortunadamente la suma de los pesos de los objetos supera holgadamente
+P. ¿Cu ́al es el menor valor total de los objetos que necesita arrojar para llegar sano y salvo a la
+costa?
+
+#Ejercicio 3
+5. Sus amigos quedaron encantados con el tel ́efono satelital, para las proximas vacaciones ofrecen
+pagarle un alquiler por  ́el. Adem ́as del dia de partida y de regreso (pi y ri) cada amigo ofrece un
+monto mi por dia. Determinar el m ́aximo valor alcanzable alquilando el tel ́efono.
+
+#Ejercicio 4
+6. Un artesano utiliza materia prima de dos tipos: A y B. Dispone de una cantidad MA y MB de
+cada una de ellas. Tiene a su vez pedidos de fabricar n productos p1, . . . , pn (uno de cada uno).
+Cada uno de ellos tiene un valor de venta v1, . . . , vn y requiere para su elaboracion cantidades
+a1, . . . , an de materia prima de tipo A y b1, . . . , bn de materia prima de tipo B. ¿Cu ́al es el mayor
+valor alcanzable con las cantidades de materia prima disponible?
+
+#Ejercicio 5
+7. En el problema de la mochila se buscaba el m ́aximo valor alcanzable al seleccionar entre n objetos
+de valores v1, . . . , vn y pesos w1, . . . , wn, respectivamente, una combinacion de ellos que quepa en
+una mochila de capacidad W. Si se tienen dos mochilas con capacidades W1 y W2, ¿cu ́al es el valor
+m ́aximo alcanzable al seleccionar objetos para cargar en ambas mochilas?
+
+#Ejercicio 6
+8. Una f ́abrica de automoviles tiene dos lineas de ensamblaje y cada linea tiene n estaciones de
+trabajo, S1,1, . . . , S1,n para la primera y S2,1, . . . , S2,n para la segunda. Dos estaciones S1,i y S2,i
+(para i = 1, . . . , n), hacen el mismo trabajo, pero lo hacen con costos a1,i y a2,i respectivamente,
+que pueden ser diferentes. Para fabricar un auto debemos pasar por n estaciones de trabajo
+Si1,1, Si2,2 . . . , Sin,n no necesariamente todas de la misma linea de montaje (ik = 1, 2). Si el
+automovil est ́a en la estacion Si,j , transferirlo a la otra linea de montaje (es decir continuar en
+Si 0,j+1 con i0 6= i) cuesta ti,j . Encontrar el costo minimo de fabricar un automovil usando ambas
+
+lineas.
+
+#Ejercicio 7
+9. El juego -U↑P% consiste en mover una ficha en un tablero de n filas por n columnas desde la fila
+inferior a la superior. La ficha se ubica al azar en una de las casillas de la fila inferior y en cada
+movimiento se desplaza a casillas adyacentes que est ́en en la fila superior a la actual, es decir, la
+ficha puede moverse a:
+• la casilla que est ́a inmediatamente arriba,
+• la casilla que est ́a arriba y a la izquierda (si la ficha no est ́a en la columna extrema izquierda),
+• la casilla que est ́a arriba y a la derecha (si la ficha no est ́a en la columna extrema derecha).
+Cada casilla tiene asociado un n ́umero entero cij (i, j = 1, . . . , n) que indica el puntaje a asignar
+cuando la ficha est ́e en la casilla. El puntaje final se obtiene sumando el puntaje de todas las
+casillas recorridas por la ficha, incluyendo las de las filas superior e inferior.
+Determinar el m ́aximo y el minimo puntaje que se puede obtener en el juego.

@@ -1,0 +1,317 @@
+#Ejercicio 1
+Ordenar los siguientes arreglos, utilizando el algoritmo de ordenacion por seleccion visto en clase.
+Mostrar en cada paso de iteracion cual es el elemento seleccionado y como queda el arreglo despues
+de cada intercambio.
+(a) [7, 1, 10, 3, 4, 9, 5] 
+(b) [5, 4, 3, 2, 1] 
+(c) [1, 2, 3, 4, 5]
+
+proc selection_sort (in/out a:array[1..n] of T)
+    var min: nat
+    for i:= 1 to n-1 do
+        min:= i
+        for j:= i+1 to n do
+            if a[j] < a[min] then
+                min:= j
+            fi
+        od
+        swap(a,i,min)
+    od
+end proc
+
+a. [7, 1, 10, 3, 4, 9, 5]
+i = 1
+min = 1
+j = 2
+1 < 7 si
+min = 2
+j = 3
+10 < 1 no
+j = 4
+3 < 1 no
+j = 5
+4 < 1 no
+j = 6
+9 < 1 no
+j = 7
+5 < 1 no
+swap(a, 1, 2)
+[1, 7, 10, 3, 4, 9, 5]
+i = 2
+min = 2
+j = 3
+10 < 7 no
+j = 4 
+3 < 7 si
+min = 4
+j = 5
+4 < 3 no
+j = 6
+9 < 3 no
+j = 7
+5 < 3 no
+swap(a, 2, 4)
+[1, 3, 10, 7, 4, 9, 5]
+i = 3
+min = 3
+j = 4
+7 < 10 si
+min = 4
+j = 5
+4 < 7 si
+min = 5
+j = 6
+9 < 4 no
+j = 7
+5 < 4 no
+swap(a, 3, 5)
+[1, 3, 4, 7, 10, 9, 5]
+i = 4
+min = 4
+j = 5
+10 < 7 no
+j = 6
+9 < 7 no 
+j = 7
+5 < 7 si
+min = 7
+swap(a, 4, 7)
+[1, 3, 4, 5, 10, 9, 7]
+i = 5
+min = 5
+j = 6
+9 < 10 si
+min = 6
+j = 7
+7 < 9 si
+min = 7
+swap(a, 5, 7)
+[1, 3, 4, 5, 7, 9, 10]
+
+b. [5, 4, 3, 2, 1]
+i = 1
+min = 1
+j = 2
+4 < 5 si
+min = 2
+j = 3
+3 < 4 si
+min = 3
+j = 4
+2 < 3 si
+min = 4
+j = 5
+1 < 2 si
+min = 5
+swap(a, 1, 5)
+[1, 4, 3, 2, 5]
+i = 2
+min = 2
+j = 3
+3 < 4 si
+min = 3
+j = 4
+2 < 3 si
+min = 4
+j = 5
+5 < 2 no
+swap(a, 2, 4)
+[1, 2, 3, 4, 5]
+
+c. [1, 2, 3, 4, 5]
+ya odenado
+
+#Ejercicio 2
+Descifrar que hacen los siguientes algoritmos, explicar como lo hacen y reescribirlos asignando
+nombres adecuados a todos los identificadores
+
+(a) [7, 1, 10, 3, 4, 9, 5] 
+proc p (in/out a: array[1..n] of T)
+    var x: nat
+    for i:= n downto 2 do
+        x:= f(a,i)
+        swap(a,i,x)
+    od
+end proc
+i = 7
+x = 3
+swap(a, 7, 3)
+[7, 1, 5, 3, 4, 9, 10]
+i = 6
+x = 6
+swap(a, 6, 6)
+[7, 1, 5, 3, 4, 9, 10]
+
+a. que hace?
+ordena un arreglo de forma creciente de atras para delante
+
+b. como lo hace?
+el procedimiento p revisa los elementos desde el ultimo hasta el segundo.
+en cada revision busca la posicion del mayor elemento en la parte del arreglo que aun no esta ordenada, usando el procedimiento f.
+intercambia el elemento mas grande encontrado con el elemento actual en la posicio nque esta revisando.
+repite esto hasta dejar el arreglo ordenado.
+
+(a) [7, 1, 10, 3, 4, 9, 5] 
+fun f (a: array[1..n] of T, i: nat) ret x: nat
+    x:= 1
+    for j:= 2 to i do
+        if a[j] > a[x] then 
+            x:= j 
+        fi
+    od
+end fun
+
+x = 1
+j = 2
+1 > 7 no
+j = 3
+10 > 7 si
+x = 3
+j = 4
+3 > 10 no 
+j = 5
+4 > 10 no
+j = 6
+9 > 10 no 
+j = 7
+5 > 10 no
+--> x = 3 = 10
+a. que hace?
+devuelve la posicion del mayor elemento de un arreglo desde el primer elemento hasta el indice "i" dado.
+
+b. como lo hace?
+el procedimiento f empieza suponiendo que el primer elemento es el mayor de todos.
+luego revisa los elementos uno por uno desde el segundo hasta el i-esimo.
+cada vez que encuentre un elemento mayor al registrado, actualiza la posicion del mayor de todos.
+al terminar de revisar todos los elementos hasta el i-esimo, devuelve la posicion del mayor de todos.
+
+(a) [7, 1, 10, 3, 4, 9, 5] 
+proc q (in/out a: array[1..n] of T)
+    for i:= n-1 downto 1 do
+        r(a,i)
+    od
+end proc
+
+a. que hace?
+orden un arreglo de forma creciente.
+
+b. como lo hace?
+revisa los elemtos desde el penultimo hasta el primero.
+ordena el arreglo con la proc r pasando la posicion actual.
+repite la operacion hasta dejar ordenado de forma creciente el arreglo.
+
+(a) [7, 1, 10, 3, 4, 9, 5] 
+proc r (in/out a: array[1..n] of T, in i: nat)
+    var j: nat
+    j:= i
+    while j < n ∧ a[j] > a[j+1] do 
+        swap(a,j+1,j)
+        j:= j+1
+    od
+end proc
+i = 1
+j = 1
+1 < 7 y 7 > 1 si
+swap(a, 2, 1)
+j = 2
+[1, 7, 10, 3, 4, 9, 5]
+2 < 7 y 7 > 10 no
+fin del algoritmo
+
+a. que hace?
+ordenar los elementos de un arreglo de forma creciente desde la poscion i-esima.
+
+b. como lo hace?
+empieza revisando el elemento en la posicion "i" con el que esta justo despues de el.
+Si el elemento actual es mayor que el que sigue, los intercambia.
+luego se mueve a la siguiente posicion y repite la operacion.
+sigue repitiendo esto mientras el indice no haya llegado al final del arreglo i y los elementos sigan necesitando intercambios.
+
+
+#Ejercicio 3
+Ordenar los arreglos del ejercicio 1 utilizando el algoritmo de ordenacion por insercion. Mostrar en
+cada paso de iteracion las comparaciones e intercambios realizados hasta ubicar el elemento en su
+posicion.
+
+proc insertion_sort (in/out a:array[1..n] of T)
+    var i: nat
+    for i:= 2 to n do
+        var j: nat
+        j:= i
+        while j > 1 ∧ a[j] < a[j-1] do
+            swap(a,j,j-1)
+            j:= j-1
+        od
+    od
+end proc
+
+#Ejercicio 4
+(a) Ordenar los arreglos del ejercicio 1 utilizando el algoritmo de ordenacion por intercalacion.
+(b) En el caso del inciso a) del ejercicio 1, dar la secuencia de llamadas al procedimiento merge sort rec
+con los valores correspondientes de sus argumentos.
+
+proc merge_sort (in/out a:array[1..n] of T, in i: nat, in j: nat)
+    if i < j then
+        var m: nat
+        m:= (i+j) div 2
+        merge_sort(a,i,m)
+        merge_sort(a,m+1,j)
+        merge(a,i,m,j)
+    fi
+end proc
+
+proc merge (in/out a:array[1..n] of T, in lft: nat, in mid: nat, in rgt: nat)
+    var temp: array[1..n] of T
+    var j,k: nat
+    for i := lft to mid do
+        temp[i]:= a[i]
+    od
+    j := lft
+    k := mid+1
+    for i = lft to rgt do
+        if j <= mid ∧ (k > rgt ∨ temp[j] <= a[k]) then
+            a[i]:= temp[j]
+            j:= j+1
+        else
+            a[i]:= a[k]
+            k:= k+1
+        fi
+    od
+end proc
+
+#Ejercicio 5
+(a) Ordenar los arreglos del ejercicio 1 utilizando el algoritmo de ordenacion rapida.
+(b) En el caso del inciso a), dar la secuencia de llamadas al procedimiento quick sort rec con los
+valores correspondientes de sus argumentos.
+
+proc quick_sort (in/out a:array[1..n] of T, in i: nat, in j: nat)
+    if i < j then
+        var p: nat
+        p:= partition(a,i,j)
+        quick_sort(a,i,p-1)
+        quick_sort(a,p+1,j)
+    fi
+end proc
+
+proc partition (in/out a:array[1..n] of T, in lft: nat, in rgt: nat) ret piv: nat
+    var i,j: nat
+    piv = lft
+    i = lft + 1
+    j = rgt
+    while i <= j do
+        if a[i] <= a[piv] then
+            i = i + 1
+        else
+            if a[j] > a[piv] then
+                j = j - 1
+            else
+                swap(a,i,j)
+                i = i + 1
+                j = j - 1
+            fi
+        fi
+    od
+    swap(a,piv,j)
+    piv = j
+end proc
+
