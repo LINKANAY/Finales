@@ -148,7 +148,7 @@ ordena un arreglo de forma creciente de atras para delante
 b. como lo hace?
 el procedimiento p revisa los elementos desde el ultimo hasta el segundo.
 en cada revision busca la posicion del mayor elemento en la parte del arreglo que aun no esta ordenada, usando el procedimiento f.
-intercambia el elemento mas grande encontrado con el elemento actual en la posicio nque esta revisando.
+intercambia el elemento mas grande encontrado con el elemento actual en la posicion que esta revisando.
 repite esto hasta dejar el arreglo ordenado.
 
 (a) [7, 1, 10, 3, 4, 9, 5] 
@@ -211,11 +211,11 @@ proc r (in/out a: array[1..n] of T, in i: nat)
 end proc
 i = 1
 j = 1
-1 < 7 y 7 > 1 si
+1 < 7 Y 7 > 1 Si
 swap(a, 2, 1)
-j = 2
 [1, 7, 10, 3, 4, 9, 5]
-2 < 7 y 7 > 10 no
+j = 2
+2 < 7 Y 7 > 10 No
 fin del algoritmo
 
 a. que hace?
@@ -229,9 +229,8 @@ sigue repitiendo esto mientras el indice no haya llegado al final del arreglo i 
 
 
 #Ejercicio 3
-Ordenar los arreglos del ejercicio 1 utilizando el algoritmo de ordenacion por insercion. Mostrar en
-cada paso de iteracion las comparaciones e intercambios realizados hasta ubicar el elemento en su
-posicion.
+Ordenar los arreglos del ejercicio 1 utilizando el algoritmo de ordenacion por insercion. 
+Mostrar en cada paso de iteracion las comparaciones e intercambios realizados hasta ubicar el elemento en su posicion.
 
 proc insertion_sort (in/out a:array[1..n] of T)
     var i: nat
@@ -244,6 +243,133 @@ proc insertion_sort (in/out a:array[1..n] of T)
         od
     od
 end proc
+
+(a) [7, 1, 10, 3, 4, 9, 5] 
+i = 2
+j = 2
+2 > 1 Y 1 < 7 Si
+swap(a, 2, 1)
+[1, 7, 10, 3, 4, 9, 5]
+j = 1
+1 > 1 Y 1 < 1 No
+i = 3
+j = 3
+10 > 1 Y 10 < 7 No
+i = 4
+j = 4
+3 > 1 Y 3 < 10  Si
+swap(a, 4, 3)
+[1, 7, 3, 10, 4, 9, 5]
+j = 3
+3 > 1 Y 3 < 7 Si
+swap(a, 3, 2)
+[1, 3, 7, 10, 4, 9, 5]
+j = 2
+2 > 1 Y 3 < 1 No
+i = 5
+j = 5
+5 > 1 Y 4 < 10 Si
+swap(a, 5, 4)
+[1, 3, 7, 4, 10, 9, 5]
+j = 4
+4 > 1 Y 4 < 7 Si
+swap(a, 4, 3)
+[1, 3, 4, 7, 10, 9, 5]
+j = 3
+3 > 1 Y 4 < 3 No
+i = 6 
+j = 6
+6 > 1 Y 9 < 10 Si
+swap(a, 6, 5)
+[1, 3, 4, 7, 9, 10, 5]
+j = 5
+5 > 1 Y 9 < 7 No
+i = 7
+j = 7
+7 > 1 Y 5 < 10 Si
+swap(a, 7, 6)
+[1, 3, 4, 7, 9, 5, 10]
+j = 6
+6 > 1 Y 5 < 9 Si
+swap(a, 6, 5)
+[1, 3, 4, 7, 5, 9, 10]
+j = 5
+5 > 1 Y 5 < 7 Si
+swap(a, 5, 4)
+[1, 3, 4, 5, 7, 9, 10]
+j = 4
+4 > 1 Y 5 < 4 No
+fin del algoritmo
+
+(b) [5, 4, 3, 2, 1]
+i = 2
+j = 2
+2 > 1 Y 4 < 5 Si
+swap(b, 2, 1)
+[4, 5, 3, 2, 1]
+j = 1
+1 > 1 ...... No
+i = 3
+j = 3
+3 > 1 Y 3 < 5 Si
+swap(b, 3, 2)
+[4, 3, 5, 2, 1]
+j = 2
+2 > 1 Y 3 < 4 Si
+swap(b, 2, 1)
+[3, 4, 5, 2, 1]
+j = 1
+1 > 1 ...... No
+i = 4 
+j = 4
+4 > 1 Y 2 < 5 Si
+swap(b, 4, 3)
+[3, 4, 2, 5, 1]
+j = 3
+3 > 1 Y 2 < 4 Si
+swap(b, 3, 2)
+[3, 2, 4, 5, 1]
+j = 2
+2 > 1 Y 2 < 3 Si
+swap(b, 2, 1)
+[2, 3, 4, 5, 1]
+j = 1
+1 > 1 ...... No
+i = 5
+j = 5
+5 > 1 Y 1 < 5 Si
+swap(b, 5, 4)
+[2, 3, 4, 1, 5]
+j = 4
+4 > 1 Y 1 < 4 Si
+swap(b, 4, 3)
+[2, 3, 1, 4, 5]
+j = 3
+3 > 1 Y 1 < 3 Si
+swap(b, 3, 2)
+[2, 1, 3, 4, 5]
+j = 2
+2 > 1 Y 1 < 2 Si
+swap(b, 2, 1)
+[1, 2, 3, 4, 5]
+j = 1
+1 > 1 ...... No
+fin del algoritmo
+
+(c) [1, 2, 3, 4, 5]
+i = 2
+j = 2
+2 > 1 Y 2 < 1 No
+i = 3 
+j = 3
+3 > 1 Y 3 < 2 No
+i = 4
+j = 4
+4 > 1 Y 4 < 3 No
+i = 5 
+j = 5
+5 > 1 Y 5 < 4 No
+fin del algoritmo
 
 #Ejercicio 4
 (a) Ordenar los arreglos del ejercicio 1 utilizando el algoritmo de ordenacion por intercalacion.
@@ -278,6 +404,193 @@ proc merge (in/out a:array[1..n] of T, in lft: nat, in mid: nat, in rgt: nat)
         fi
     od
 end proc
+
+(a) [7, 1, 10, 3, 4, 9, 5]
+i = 1
+j = 7
+1 < 7 Si
+m = (1+7)/2 = 4
+merge_sort(a, 1, 4)
+    i = 1
+    j = 4
+    1 < 4 Si
+    m = (1+4)/2 = 2
+    merge_sort(a, 1, 2)
+        i = 1
+        j = 2
+        1 < 2 Si
+        m = (1+2)/2 = 1
+        merge_sort(a, 1, 1)
+            i = 1
+            j = 1
+            1 < 1 No
+        merge_sort(a, 2, 2)
+            i = 2
+            j = 2
+            2 < 2 No
+        merge(a, 1, 1, 2)
+            temp[7]
+            j = 1
+            k = 1 + 1
+            i = 1
+                1 <= 2 Y (2 > 2 O 7 <= 1) No
+                [1, 1, 10, 3, 4, 9, 5]
+                k = 2 + 1
+            i = 2
+                1 <= 2 Y (3 > 2 O 7 <= 10) Si
+                [1, 7, 10, 3, 4, 9, 5]
+                j = 1 + 1
+    merge_sort(a, 3, 4)
+        i = 3
+        j = 4
+        3 < 4 Si
+        m = (3+4)/2 = 3
+        merge_sort(a, 3, 3)
+            i = 3
+            j = 3
+            3 < 3 No
+        merge_sort(a, 4, 4)
+            i = 4
+            j = 4
+            4 < 4 No
+        merge(a, 3, 3, 4)
+            temp[10]
+            j = 3
+            k = 3 + 1
+            i = 3
+                3 <= 3 Y (4 > 4 O 10 <= 3) No
+                [1, 7, 3, 3, 4, 9, 5]
+                k = 4 + 1
+            i = 4
+                3 <= 3 Y (5 > 4 O 10 <= 4) Si
+                [1, 7, 3, 10, 4, 9, 5]
+                j = 3 + 1
+    merge(a, 1, 2, 4)
+        temp[1, 7]
+        j = 1
+        k = 2 + 1 = 3
+        i = 1
+            1 <= 2 Y (3 > 4 O 1 <= 3) Si
+            [1, 7, 3, 10, 4, 9, 5]
+            j = 1 + 1 = 2
+        i = 2
+            2 <= 2 Y (3 > 4 O 7 <= 3) No
+            [1, 3, 3, 10, 4, 9, 5]
+            k = 3 + 1 = 4
+        i = 3
+            2 <= 2 Y (4 > 4 O 3 <= 10) Si
+            [1, 3, 7, 10, 4, 9, 5]
+            j = 2 + 1 = 3
+        i = 4
+            3 <= 2 ...... No
+            [1, 3, 7, 10, 4, 9, 5]
+            k = 4 + 1 = 5
+merge_sort(a, 5, 7)
+    i = 5
+    j = 7
+    5 < 7 Si
+    m = (5+7)/2 = 6
+    merge_sort(a, 5, 6)
+        i = 5
+        j = 6
+        5 < 6 Si
+        m = (5+6)/2 = 5
+        merge_sort(a, 5, 5)
+            i = 5
+            j = 5
+            5 < 5 No
+        merge_sort(a, 6, 6) 
+            i = 6
+            j = 6
+            6 < 6 No
+        merge(a, 5, 5, 6)
+            temp[4, 9]
+            j = 5
+            k = 5 + 1 = 6
+            i = 5
+                5 <= 5 Y (6 > 6 O 4 <= 9) Si
+                [1, 3, 7, 10, 4, 9, 5]
+                j = 5 + 1 = 6
+            i = 6
+                6 <= 5 ...... No
+                [1, 3, 7, 10, 4, 9, 5]
+                k = 6 + 1 = 7
+    merge_sort(a, 7, 7)
+        i = 7
+        j = 7
+        7 < 7 No
+    merge(a, 5, 6, 7)
+        temp[4, 9]
+        j = 5
+        k = 6 + 1 = 7
+        i = 5
+            5 <= 6 Y (7 > 7 O 4 <= 5) Si
+            [1, 3, 7, 10, 4, 9, 5]
+            j = 5 + 1 = 6
+        i = 6
+            6 <= 6 Y (7 > 7 O 9 <= 5) No
+            [1, 3, 7, 10, 4, 5, 5]
+            k = 7 + 1 = 8
+        i = 7
+            6 <= 6 Y (9 > 7 O 5 <= ...) Si
+            [1, 3, 7, 10, 4, 5, 9]
+            j = 6 + 1 = 7
+merge(a, 1, 4, 7)
+    temp[1, 3, 7, 10]
+    j = 1
+    k = 4 + 1 = 5
+    i = 1
+        1 <= 4 Y (5 > 7 O 1 <= 4) Si
+        [1, 3, 7, 10, 4, 5, 9]
+        j = 1 + 1 = 2
+    i = 2
+        2 <= 4 Y (5 > 7 O 3 <= 4) Si
+        [1, 3, 7, 10, 4, 5, 9]
+        j = 2 + 1 = 3
+    i = 3
+        3 <= 4 Y (5 > 7 O 7 <= 4) No
+        [1, 3, 4, 10, 4, 5, 9]
+        k = 5 + 1 = 6
+    i = 4
+        3 <= 4 Y (6 > 7 O 7 <= 5) No
+        [1, 3, 4, 5, 4, 5, 9]
+        k = 6 + 1 = 7
+    i = 5
+        3 <= 4 Y (7 > 7 O 7 <= 9) Si
+        [1, 3, 4, 5, 7, 5, 9]
+        j = 3 + 1 = 4
+    i = 6
+        4 <= 4 Y (7 > 7 O 10 <= 9) No
+        [1, 3, 4, 5, 7, 9, 9]
+        k = 7 + 1 = 8
+    i = 7
+        4 <= 4 Y (8 > 7 O ...) Si
+        [1, 3, 4, 5, 7, 9, 10]
+        j = 4 + 1 = 5
+fin del algoritmo
+
+
+proc merge (in/out a:array[1..n] of T, in lft: nat, in mid: nat, in rgt: nat)
+    var temp: array[1..n] of T
+    var j,k: nat
+    for i := lft to mid do
+        temp[i]:= a[i]
+    od
+    j := lft
+    k := mid+1
+    for i = lft to rgt do
+        if j <= mid ∧ (k > rgt ∨ temp[j] <= a[k]) then
+            a[i]:= temp[j]
+            j:= j+1
+        else
+            a[i]:= a[k]
+            k:= k+1
+        fi
+    od
+end proc
+
+(b) [5, 4, 3, 2, 1] 
+(c) [1, 2, 3, 4, 5]
 
 #Ejercicio 5
 (a) Ordenar los arreglos del ejercicio 1 utilizando el algoritmo de ordenacion rapida.
@@ -315,3 +628,6 @@ proc partition (in/out a:array[1..n] of T, in lft: nat, in rgt: nat) ret piv: na
     piv = j
 end proc
 
+(a) [7, 1, 10, 3, 4, 9, 5] 
+(b) [5, 4, 3, 2, 1] 
+(c) [1, 2, 3, 4, 5]

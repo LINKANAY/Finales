@@ -1,5 +1,17 @@
 #Ejercicio 1
 Escribir un algoritmo que dada una matriz a: array[1..n,1..m] of int calcule el elemento minimo.
+
+fun minElemento(a: array[1..n,1..m] of int) ret min: int
+    min := -inf
+    for i:= 1 to n do
+        for j := 1 to m do
+            if min > a[i, j] then
+                min := a[i, j]
+            fi
+        od
+    od
+end fun
+
 Escribir otro algoritmo que devuelva un arreglo array[1..n] con el minimo de cada fila de la matriz a.
 
 #Ejercicio 2
