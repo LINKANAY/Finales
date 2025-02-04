@@ -1,36 +1,245 @@
 #Ejercicio 1
 Completaar la implementacion de listas dada en el teorico usando punteros.
 
+spec List of T where
+
+constructors
+    fun empty() ret l : List of T
+    {- crea una lista vacía. -}
+    proc addl (in e : T, in/out l : List of T)
+    {- agrega el elemento e al comienzo de la lista l. -}
+
+destroy
+    proc destroy (in/out l : List of T)
+    {- Libera memoria en caso que sea necesario. -}
+
+operations
+    fun is_empty(l : List of T) ret b : bool
+    {- Devuelve True si l es vacía. -}
+    fun head(l : List of T) ret e : T
+    {- Devuelve el primer elemento de la lista l -}
+    {- PRE: not is_empty(l) -}
+    proc tail(in/out l : List of T)
+    {- Elimina el primer elemento de la lista l -}
+    {- PRE: not is_empty(l) -}
+    proc addr (in/out l : List of T,in e : T)
+    {- agrega el elemento e al final de la lista l. -}
+    fun length(l : List of T) ret n : nat
+    {- Devuelve la cantidad de elementos de la lista l -}
+    proc concat(in/out l : List of T,in l0 : List of T)
+    {- Agrega al final de l todos los elementos de l0
+    en el mismo orden.-}
+    fun index(l : List of T,n : nat) ret e : T
+    {- Devuelve el n-ésimo elemento de la lista l -}
+    {- PRE: length(l) > n -}
+    proc take(in/out l : List of T,in n : nat)
+    {- Deja en l sólo los primeros n
+    elementos, eliminando el resto -}
+    proc drop(in/out l : List of T,in n : nat)
+    {- Elimina los primeros n elementos de l -}
+    fun copy_list(l1 : List of T) ret l2 : List of T
+    {- Copia todos los elementos de l1 en la nueva lista l2 -}
+
+implement List of T where
+
+type Node of T = tuple
+                    elem: T
+                    next: pointer to (Node of T)
+                end tuple
+
+type List of T = pointer to (Node of T)
+
+constructors
+    {- crea una lista vacía. -}
+    fun empty() ret l : List of T
+        l:= null
+    end fun
+
+    {- agrega el elemento e al comienzo de la lista l. -}    
+    proc addl (in e : T, in/out l : List of T)
+        var new_node : pointer to (Node of T)
+        alloc(new_node)
+        new_node->elem := e
+        new_node->next := l
+        l := new_node
+    end proc
+
+destroy
+    {- Libera memoria en caso que sea necesario. -}
+    proc destroy (in/out l : List of T)
+        while not is_empty(l) do
+            tail(l)
+        od
+        free(l)
+        l := null
+    end proc
+
+operations
+    {- Devuelve True si l es vacía. -}
+    fun is_empty(l : List of T) ret b : bool
+        b:= l == null
+    end fun
+
+    {- Devuelve el primer elemento de la lista l -}
+    {- PRE: not is_empty(l) -}
+    fun head(l : List of T) ret e : T
+        e:= l->elem
+    end fun
+
+    {- Elimina el primer elemento de la lista l -}
+    {- PRE: not is_empty(l) -}
+    proc tail(in/out l : List of T)
+        var killme : pointer to  (Node of T)
+        killme := l->elem
+        l := l->next
+        free(killme)
+    end proc
+
+    {- agrega el elemento e al final de la lista l. -}
+    proc addr (in/out l : List of T,in e : T)
+        var new_node : pointer to (Node of T)
+        var current : pointer to (Node of T)
+        alloc(new_node)
+        new_node->elem := e
+        new_node->next := null
+        if not is_empty(l) then
+            current := l
+            while current->next != null do
+                current:= current->next
+            od
+            current->next := new_node
+        else
+            l := new_node
+        fi
+    end proc
+
+    {- Devuelve la cantidad de elementos de la lista l -}
+    fun length(l : List of T) ret n : nat
+        var current : pointer to (Node of T)
+        n := 0
+        current := l
+        while current != null do
+            n := n +1 
+            current := current->next
+        od
+    end fun
+    
+    {- Agrega al final de l todos los elementos de l0 en el mismo orden.-}
+    proc concat(in/out l : List of T,in l0 : List of T)
+        if not is_empty(l0) then
+            var current : pointer to (Node of T)
+            current := l0
+            while current != null do
+                addr(l, current->elem)
+                current := current->next
+            od
+    end proc
+
+    {- Devuelve el n-ésimo elemento de la lista l -}
+    {- PRE: length(l) > n -}
+    fun index(l : List of T,n : nat) ret e : T
+        var current : pointer to (Node of T)
+        var contador : int
+        contador := 1
+        current := l
+        while contador != n do
+            current := current->next
+            contador := contador +1
+        od
+        e := current->elem
+    end fun
+
+    {- Deja en l sólo los primeros n elementos, eliminando el resto -}
+    proc take(in/out l : List of T,in n : nat)
+        if length(l) > n then
+            var current : pointer to (Node of T)
+            var contador : int
+
+            contador := 1
+            current := l
+            while contador < n do
+                current := current->next
+                contador := contador +1
+            od
+
+            var resto : pointer to (Node of T)
+            resto := current->next
+            current-next := null
+            
+            destroy(resto)   
+
+        else
+            skip
+        fi
+    end proc
+
+    
+    {- Elimina los primeros n elementos de l -}
+    proc drop(in/out l : List of T,in n : nat)
+        var contador : int
+        contador := 0
+        while (contador < n) and (not is_empty(l)) do
+            tail(l)
+            contador := contador +1
+        od
+    end proc
+    
+    {- Copia todos los elementos de l1 en la nueva lista l2 -}
+    fun copy_list(l1 : List of T) ret l2 : List of T
+        var current : pointer to (Node of T)
+        current := l1
+        while current != null do
+            addr(l2, current->elem)
+            current := current->next
+        od
+    end fun
+
+
 #Ejercicio 2
-Dada una constante natural N, implementar el TAD Lista de elementos de tipo T, usando un arreglo de tamaño N y un natural que indica cuantos elementos del arreglo son ocupados por elementos de la lista. 
+Dada una constante natural N, implementar el TAD Lista de elementos de tipo T, 
+usando un arreglo de tamaño N y un natural que indica cuantos elementos del arreglo son ocupados por elementos de la lista. 
 ¿Esta implementacion impone nuevas restricciones? 
 ¿En que funcion o procedimiento tenemos una nueva precondicion?
 
 #Ejercicio 3
-3. Implementar el procedimiento add at que toma una lista de tipo T, un natural n, un elemento e de tipo T, y agrega el elemento e en la posicion n, quedando todos los elementos siguientes a continuacion.
+3. Implementar el procedimiento add at que toma una lista de tipo T, un natural n, un elemento e de tipo T, y 
+agrega el elemento e en la posicion n, quedando todos los elementos siguientes a continuacion.
 Esta operacion tiene como precondicion que n sea menor al largo de la lista.
 AYUDA: Puede ayudarte usar las operaciones copy, take y drop.
 
 #Ejercicio 4 
 (a) Especificar un TAD tablero para mantener el tanteador en contiendas deportivas entre dos equipos (equipo A y equipo B). 
-Debera tener un constructor para el comienzo del partido (tanteador inicial), un constructor para registrar un nuevo tanto del equipo A y uno para registrar un nuevo tanto del equipo B. 
+Debera tener un constructor para el comienzo del partido (tanteador inicial), 
+un constructor para registrar un nuevo tanto del equipo A y uno para registrar un nuevo tanto del equipo B. 
 El tablero solo registra el estado actual del tanteador, por lo tanto el orden en que se fueron anotando los tantos es irrelevante.
-Ademas se requiere operaciones para comprobar si el tanteador esta en cero, si el equipo A ha anotado algun tanto, si el equipo B ha anotado algun tanto, una que devuelva verdadero si y solo si el equipo A va ganando, otra que devuelva verdadero si y solo si el equipo B va ganando, y
+Ademas se requiere operaciones para comprobar si el tanteador esta en cero, 
+si el equipo A ha anotado algun tanto, si el equipo B ha anotado algun tanto, 
+una que devuelva verdadero si y solo si el equipo A va ganando, otra que devuelva verdadero si y solo si el equipo B va ganando, y
 una que devuelva verdadero si y solo si se registra un empate.
-Finalmente habra una operacion que permita anotarle un numero n de tantos a un equipo y otra que permita “castigarlo” restandole un numero n de tantos. En este ultimo caso, si se le restan mas tantos de los acumulados equivaldra a no haber anotado ninguno desde el comienzo del partido.
-(b) Implementar el TAD Tablero utilizando una tupla con dos contadores: uno que indique los tantos del equipo A, y otro que indique los tantos del equipo B.
-(c) Implementar el TAD Tablero utilizando una tupla con dos naturales: uno que indique los tantos del equipo A, y otro que indique los tantos del equipo B. 
+Finalmente habra una operacion que permita anotarle un numero n de tantos a un equipo y 
+otra que permita “castigarlo” restandole un numero n de tantos. 
+En este ultimo caso, si se le restan mas tantos de los acumulados equivaldra a no haber anotado ninguno desde el comienzo del partido.
+(b) Implementar el TAD Tablero utilizando una tupla con dos contadores: 
+uno que indique los tantos del equipo A, y otro que indique los tantos del equipo B.
+(c) Implementar el TAD Tablero utilizando una tupla con dos naturales: 
+uno que indique los tantos del equipo A, y otro que indique los tantos del equipo B. 
 ¿Hay alguna diferencia con la implementacion del inciso anterior? 
 ¿Alguna operacion puede resolverse mas eficientemente?
 
 #Ejercicio 5 
 Especificar el TAD Conjunto finito de elementos de tipo T. 
-Como constructores considerar el conjunto vacio y el que agrega un elemento a un conjunto. Como operaciones: una que chequee si un elemento e pertenece a un conjunto c, una que chequee si un conjunto es vacio, la operacion de unir un conjunto a otro , insersectar un conjunto con otro y obtener la diferencia. Estas ultimas tres operaciones deberian especificarse como procedimientos que toman dos conjuntos y modifican el primero de ellos.
+Como constructores considerar el conjunto vacio y el que agrega un elemento a un conjunto. 
+Como operaciones: una que chequee si un elemento e pertenece a un conjunto c, 
+una que chequee si un conjunto es vacio, la operacion de unir un conjunto a otro , 
+insersectar un conjunto con otro y obtener la diferencia. 
+Estas ultimas tres operaciones deberian especificarse como procedimientos que toman dos conjuntos y modifican el primero de ellos.
 
 #Ejercicio 6
 6. Implementar el TAD Conjunto finito de elementos de tipo T utilizando:
-(a) una lista de elementos de tipo T, donde el constructor para agregar elementos al conjunto se implementa directamente con el constructor addl de las listas.
-(b) una lista de elementos de tipo T, donde se asegure siempre que la lista esta ordenada crecientemente y no tiene elementos repetidos. 
+(a) una lista de elementos de tipo T, 
+donde el constructor para agregar elementos al conjunto se implementa directamente con el constructor addl de las listas.
+(b) una lista de elementos de tipo T, 
+donde se asegure siempre que la lista esta ordenada crecientemente y no tiene elementos repetidos. 
 Debes tener cuidado especialmente con el constructor de agregar elemento y las operaciones de union, interseccion y diferencia. 
 A la propiedad de mantener siempre la lista ordenada y sin repeticiones le llamamos invariante de representacion.
 Ayuda: Para implementar el constructor de agregar elemento puede serte muy util la operacion add at implementada en el punto 3.
