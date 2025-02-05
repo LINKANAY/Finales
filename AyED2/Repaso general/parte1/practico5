@@ -197,9 +197,162 @@ operations
 
 #Ejercicio 2
 Dada una constante natural N, implementar el TAD Lista de elementos de tipo T, 
-usando un arreglo de tamaño N y un natural que indica cuantos elementos del arreglo son ocupados por elementos de la lista. 
-¿Esta implementacion impone nuevas restricciones? 
+usando un arreglo de tamaño N y 
+un natural que indica cuantos elementos del arreglo son ocupados por elementos de la lista. 
+
+spec List of T where
+
+constructors
+    fun empty() ret l : List of T
+    {- crea una lista vacía. -}
+    proc addl (in e : T, in/out l : List of T)
+    {- agrega el elemento e al comienzo de la lista l. -}
+
+destroy
+    proc destroy (in/out l : List of T)
+    {- Libera memoria en caso que sea necesario. -}
+
+operations
+    fun is_empty(l : List of T) ret b : bool
+    {- Devuelve True si l es vacía. -}
+    fun head(l : List of T) ret e : T
+    {- Devuelve el primer elemento de la lista l -}
+    {- PRE: not is_empty(l) -}
+    proc tail(in/out l : List of T)
+    {- Elimina el primer elemento de la lista l -}
+    {- PRE: not is_empty(l) -}
+    proc addr (in/out l : List of T,in e : T)
+    {- agrega el elemento e al final de la lista l. -}
+    fun length(l : List of T) ret n : nat
+    {- Devuelve la cantidad de elementos de la lista l -}
+    proc concat(in/out l : List of T,in l0 : List of T)
+    {- Agrega al final de l todos los elementos de l0
+    en el mismo orden.-}
+    fun index(l : List of T,n : nat) ret e : T
+    {- Devuelve el n-ésimo elemento de la lista l -}
+    {- PRE: length(l) > n -}
+    proc take(in/out l : List of T,in n : nat)
+    {- Deja en l sólo los primeros n
+    elementos, eliminando el resto -}
+    proc drop(in/out l : List of T,in n : nat)
+    {- Elimina los primeros n elementos de l -}
+    fun copy_list(l1 : List of T) ret l2 : List of T
+    {- Copia todos los elementos de l1 en la nueva lista l2 -}
+
+implement List of T where
+
+type List of T = tuple
+                    size: int
+                    lista: array[1..N] of int
+                end tuple
+
+constructors
+    {- crea una lista vacía. -}
+    fun empty() ret l : List of T
+        l.size := 0
+        l.lista := [1..N] of T
+    end fun
+
+    {- agrega el elemento e al comienzo de la lista l. -}
+    proc addl (in e : T, in/out l : List of T)
+        if l.size == 0 then
+            l.size := 1
+            l.lista[l.size] := e
+        else
+            for i := l.size downto 1 do
+                l.lista[i+1] := l.lista[i]
+            od
+            l.lista[1] := e
+            l.size := l.size + 1
+        fi
+    end proc
+
+
+destroy
+    {- Libera memoria en caso que sea necesario. -}
+    proc destroy (in/out l : List of T)
+        skip
+    end proc
+
+operations
+    {- Devuelve True si l es vacía. -}
+    fun is_empty(l : List of T) ret b : bool
+        b := l.size == 0
+    end fun
+
+    {- Devuelve el primer elemento de la lista l -}
+    {- PRE: not is_empty(l) -}
+    fun head(l : List of T) ret e : T
+        e := l.lista[1]
+    end fun
+
+    {- Elimina el primer elemento de la lista l -}
+    {- PRE: not is_empty(l) -}
+    proc tail(in/out l : List of T)
+        for i := 1 to copy.size - 1 do
+            l.lista[i] := l.lista[i+1]
+        od
+        l.size := l.size -1
+    end proc
+
+    {- agrega el elemento e al final de la lista l. -}
+    proc addr (in/out l : List of T,in e : T)
+        l.size := l.size +1
+        l.lista[l.size] := e
+    end proc
+
+    {- Devuelve la cantidad de elementos de la lista l -}
+    fun length(l : List of T) ret n : nat
+        n := l.size
+    end fun
+
+    {- Agrega al final de l todos los elementos de l0 en el mismo orden.-}
+    proc concat(in/out l : List of T,in l0 : List of T)
+        if l0.size > 0 then
+            for i := 1 to l0.size do
+                addr(l, head(l0))
+                tail(l0)
+            od
+        else
+            skip
+        fi
+    end proc
+
+
+    {- Devuelve el n-ésimo elemento de la lista l -}
+    {- PRE: length(l) > n -}
+    fun index(l : List of T,n : nat) ret e : T
+        e := l.lista[n]
+    end fun
+    
+    {- Deja en l sólo los primeros n elementos, eliminando el resto -}
+    proc take(in/out l : List of T,in n : nat)
+        l.size := n
+    end proc
+
+    {- Elimina los primeros n elementos de l -}
+    proc drop(in/out l : List of T,in n : nat)
+        if n > 0 then
+            for i := 1 to n do
+                tail(l)
+            of
+        else
+            skip
+        fi
+    end proc
+
+    {- Copia todos los elementos de l1 en la nueva lista l2 -}
+    fun copy_list(l1 : List of T) ret l2 : List of T
+        l2.size := l1.size
+        for i := 1 to l1.size do
+            l2.lista[i] := l1.lista[i]
+        od
+    end fun
+
+¿Esta implementacion impone nuevas restricciones?
+Si, se tiene restringida por la constante N el tamaño del arreglo
 ¿En que funcion o procedimiento tenemos una nueva precondicion?
+drop y concat por lo menos toco hacer verificacion de tamaño
 
 #Ejercicio 3
 3. Implementar el procedimiento add at que toma una lista de tipo T, un natural n, un elemento e de tipo T, y 
