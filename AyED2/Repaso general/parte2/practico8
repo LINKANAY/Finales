@@ -1,15 +1,54 @@
+/*
+(a) Especicar precisamente qué calcula la función recursiva que resolverá el problema, indicando qué argumentos
+toma y la utilidad de cada uno.
+(b) Dar la llamada o la expresión principal que resuelve el problema.
+(c) Denfinir la función en notación matemática.
+*/
+
 #Ejercicio 1
 Una panaderia recibe n pedidos por importes m1, . . . , mn, pero solo queda en deposito una cantidad
-H de harina en buen estado. Sabiendo que los pedidos requieren una cantidad h1, . . . , hn de harina
-(respectivamente), determinar el m ́aximo importe que es posible obtener con la harina disponible.
+H de harina en buen estado. 
+Sabiendo que los pedidos requieren una cantidad h1, . . . , hn de harina (respectivamente), 
+determinar el maximo importe que es posible obtener con la harina disponible.
+
+(a) Especicar precisamente qué calcula la función recursiva que resolverá el problema, indicando qué argumentos
+toma y la utilidad de cada uno.
+
+pedidosPanaderia(i, c) "el maximo importe de 1 a i pedidos, que es posible obtener con la harina disponible c"
+
+(b) Dar la llamada o la expresión principal que resuelve el problema.
+
+pedidosPanaderia(n, H)
+
+(c) Denfinir la función en notación matemática.
+
+pedidosPanaderia(i, c)
+
+casos posibles:
+sin pedidos, sin harina
+sin pedidos, con harina
+con pedidos, sin harina
+con pedidos, con harina
+
+si i <= 0 && (c > 0 || c <= 0) -------------------> 0            /* 0 importe conseguible */
+si i > 0, c <= 0 ---------------------------------> 0    /* 0 importe conseguible */
+si i > 0, c > 0 ----------------------------------> max(mi + pedidosPanaderia(i-1, c-hi), pedidosPanaderia(i-1, c))
 
 #Ejercicio 2
-4. Usted se encuentra en un globo aerost ́atico sobrevolando el oc ́eano cuando descubre que empieza a
-perder altura porque la lona est ́a levemente da ̃nada. Tiene consigo n objetos cuyos pesos p1, . . . , pn
-y valores v1, . . . , vn conoce. Si se desprende de al menos P kilogramos lograr ́a recuperar altura y
-llegar a tierra firme, y afortunadamente la suma de los pesos de los objetos supera holgadamente
-P. ¿Cu ́al es el menor valor total de los objetos que necesita arrojar para llegar sano y salvo a la
-costa?
+4. Usted se encuentra en un globo aerostatico sobrevolando el oceano cuando descubre que empieza a
+perder altura porque la lona esta levemente dañada. 
+Tiene consigo n objetos cuyos pesos p1, . . . , pn y valores v1, . . . , vn conoce. 
+Si se desprende de al menos P kilogramos lograra recuperar altura y llegar a tierra firme, 
+y afortunadamente la suma de los pesos de los objetos supera holgadamente P. 
+¿Cual es el menor valor total de los objetos que necesita arrojar para llegar sano y salvo a la costa?
+
+(a) Especicar precisamente qué calcula la función recursiva que resolverá el problema, 
+indicando qué argumentos toma y la utilidad de cada uno.
+
+
+
+(b) Dar la llamada o la expresión principal que resuelve el problema.
+(c) Denfinir la función en notación matemática.
 
 #Ejercicio 3
 5. Sus amigos quedaron encantados con el tel ́efono satelital, para las proximas vacaciones ofrecen

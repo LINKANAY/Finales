@@ -360,6 +360,18 @@ agrega el elemento e en la posicion n, quedando todos los elementos siguientes a
 Esta operacion tiene como precondicion que n sea menor al largo de la lista.
 AYUDA: Puede ayudarte usar las operaciones copy, take y drop.
 
+{- Agrega el elemento e en la posicion n -}
+{- PRE: n <= length(l) -}
+proc add_at(in/out l : List of T, in n : nat, in e : T)
+    var copy : List of T
+    copy := copy_list(l)
+    drop(copy, n)
+
+    take(l, n)
+    addr(l, e)
+    concat(l, copy)
+end proc
+
 #Ejercicio 4 
 (a) Especificar un TAD tablero para mantener el tanteador en contiendas deportivas entre dos equipos (equipo A y equipo B). 
 Debera tener un constructor para el comienzo del partido (tanteador inicial), 

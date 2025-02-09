@@ -3,6 +3,40 @@ Implementar el TAD Pila utilizando la siguiente representacion:
 implement Stack of T where
 type Stack of T = List of T
 
+constructors
+
+{- crea una pila vacía. -}
+fun empty_stack() ret s : Stack of T
+    s := empty()
+end fun
+
+{- agrega el elemento e al tope de la pila s. -}
+proc push (in e : T, in/out s : Stack of T)
+    addl(s, e)
+end proc
+
+operations
+
+{- Devuelve True si la pila es vacía -}
+fun is_empty_stack(s : Stack of T) ret b : Bool
+    b := s.size == 0
+end fun
+
+{- Devuelve el elemento que se encuentra en el tope de s. -}
+{- PRE: not is_empty_stack(s) -}
+fun top(s : Stack of T) ret e : T
+    e := head(s)
+end fun
+
+{- Elimina el elemento que se encuentra en el tope de s. -}
+{- PRE: not is_empty_stack(s) -}
+proc pop (in/out s : Stack of T)
+    tail(s)
+end proc
+
+De aquí en adelante omitiremos escribir las operaciones de destrucción y
+copia que incluimos en todo TAD, pero las asumimos especificadas.
+
 #Ejercicio 2
 Implementar el TAD Pila utilizando la siguiente representacion:
 implement Stack of T where
@@ -20,6 +54,23 @@ type Queue of T = tuple
                     elems : array[0..N-1] of T
                     size : nat
                 end tuple
+
+constructors
+fun empty_queue() ret q : Queue of T
+{- crea una cola vacía. -}
+proc enqueue (in/out q : Queue of T, in e : T)
+{- agrega el elemento e al final de la cola q. -}
+
+operations
+fun is_empty_queue(q : Queue of T) ret b : Bool
+{- Devuelve True si la cola es vacía -}
+fun first(q : Queue of T) ret e : T
+{- Devuelve el elemento que se encuentra al comienzo de q. -}{- PRE: not is_empty_queue(q) -}
+proc dequeue (in/out q : Queue of T)
+{- Elimina el elemento que se encuentra al comienzo de q. -}
+{- PRE: not is_empty_queue(q) -}
+
+
 
 (b) Implementar el TAD Cola utilizando un arreglo como en el inciso anterior, pero asegurando que
 todas las operaciones esten implementadas en orden constante.
