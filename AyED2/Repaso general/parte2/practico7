@@ -1,12 +1,103 @@
+/*
+a. indicar de manera simple y concreta, cual es el criterio de seleccion voraz para construir la solucion.
+b. indicar que estructura de datos utilizara para resolver el problema.
+c. explicar en palabras como resolvera el problema el algoritmo.
+d. implementar el algoritmo en el lenguaje de la materia de manera precisa.
+*/
+
+
 #Ejercicio 1
-Se desea realizar un viaje en un autom ́ovil con autonom ́ıa A (en kil ́ometros), desde la localidad l0 hasta la
+Se desea realizar un viaje en un automovil con autonomia A (en kilometros), desde la localidad l0 hasta la
 localidad ln pasando por las localidades l1, . . . , ln−1 en ese orden. Se conoce cada distancia di ≤ A entre
-la localidad li−1 y la localidad li (para 1 ≤ i ≤ n), y se sabe que existe una estaci ́on de combustible en
+la localidad li−1 y la localidad li (para 1 ≤ i ≤ n), y se sabe que existe una estacion de combustible en
 cada una de las localidades.
-Escribir un algoritmo que compute el menor n ́umero de veces que es necesario cargar combustible para
-realizar el viaje, y las localidades donde se realizar ́ıa la carga.
-Suponer que inicialmente el tanque de combustible se encuentra vac ́ıo y que todas las estaciones de servicio
+Escribir un algoritmo que compute el menor numero de veces que es necesario cargar combustible para
+realizar el viaje, y las localidades donde se realizaria la carga.
+
+Suponer que inicialmente el tanque de combustible se encuentra vacio y que todas las estaciones de servicio
 cuentan con suficiente combustible.
+
+a. indicar de manera simple y concreta, cual es el criterio de seleccion voraz para construir la solucion.
+
+criterio de seleccion: devolver la ciudad a la que mas lejos se pueda llegar
+
+b. indicar que estructura de datos utilizara para resolver el problema.
+
+estructura de datos: 
+
+type localidades = tuple
+                        id: int 
+                        dis: int 
+                    end tuple
+
+c. explicar en palabras como resolvera el problema el algoritmo.
+
+explicacion resolucion:
+el algoritmos consiste en hacer una carga inicial de autonomia y registro de localidad.
+luego en base al algoritmo voraz mencionado antes, devolver la localidad a la cual se puede llegar mas lejos.
+registrar dicha localidad y sumar una carga mas.
+repetir la misma operacion hasta llegar al destino final.
+
+d. implementar el algoritmo en el lenguaje de la materia de manera precisa.
+
+fun viaje(lista : List of localidades, A : int ) ret listLoca: List of localidades, minStop : int
+    --variables
+    var copy : List of localidades
+    var locali: localidades
+    var posicion : int 
+    var fin : int
+
+    --inicializar variables
+    copy := copy_list(lista)
+    minStop := 1
+    addr(listLoca, head(copy))
+    posicion := head(copy).id
+    fin := index(length(copy)).id
+    tail(copy)
+    A := 100                                        /*cargamos la autonomia con un valor que queramos*/
+    
+    --ejecucion 
+    while posicion < fin  do ->
+        locali := select_voraz(copy, A)             /*devolver la localidad mas lejana que se pueda llegar*/
+        addr(listLoca, locali)
+        posicion := locali.id
+        deleteCity(copy, posicion)
+        minStop := minStop +1
+    od
+    set_destroy(copy)
+end proc
+
+fun select_voraz(lista : List of localidades, A : int) ret locali : localidades
+    --variables
+    var distancia : int
+
+    --inicializar variables
+    distancia := 0 
+
+    --ejecucion
+    for i = 1 to length(lista) do
+        if lista[i].dis <= A && distancia <= A then 
+            locali := lista[i]
+            distancia := distancia + locali.dis
+        if
+    od
+
+end fun 
+      
+proc deleteCity(in/out lista : List of localidades, in pos : int)
+    for i := 1 to pos do
+        if lista[i].id <= pos then
+            tail(lista)
+        else
+            skip
+        fi
+    od
+end proc
+
+
+
+
+
 
 #Ejercicio 2
 En numerosas oportunidades se ha observado que cientos de ballenas nadan juntas hacia la costa y quedan
@@ -19,6 +110,11 @@ es capaz de sobrevivir hasta que la asista un equipo de rescate. Dar un algoritm
 orden en que deben ser rescatadas para salvar el mayor n ́umero posible de ellas, asumiendo que llevar una
 ballena mar adentro toma tiempo constante t, que hay un  ́unico equipo de rescate y que una ballena no
 muere mientras est ́a siendo regresada mar adentro.
+
+a. indicar de manera simple y concreta, cual es el criterio de seleccion voraz para construir la solucion.
+b. indicar que estructura de datos utilizara para resolver el problema.
+c. explicar en palabras como resolvera el problema el algoritmo.
+d. implementar el algoritmo en el lenguaje de la materia de manera precisa.
 
 #Ejercicio 3
 Sos el flamante due ̃no de un tel ́efono satelital, y se lo ofrec ́es a tus n amigos para que lo lleven con
