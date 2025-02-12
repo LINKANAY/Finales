@@ -1,0 +1,241 @@
+spec Set of T where
+
+constructors
+fun empty_set() ret s : Set of T
+{- Crea un conjunto vacío -}
+
+proc add(in/out s : Set of T, in e : T)
+{- Agrega el elemento e al conjunto s -}
+
+destroy
+proc destroy_set(in/out s : Set of T)
+{- Libera memoria en caso que sea necesario. -}
+
+operations
+fun cardinal(s : Set of T) ret n : nat
+{- Devuelve la cantidad de elementos que tiene s -}
+
+fun is_empty_set(s : Set of T) ret b : bool
+{- Devuelve True si s es vacío -}
+
+fun member(e : T, s : Set of T) ret b : bool
+{- Devuelve True si el elemento e pertenece al conjunto s -}
+
+proc elim(in/out s : Set of T, in e : T)
+{- Elimina el elemento e del conjunto s, en caso que esté -}
+
+proc union(in/out s : Set of T, in s0 : Set of T)
+{- Agrega a s todos los elementos de s0 -}
+
+proc inters(in/out s : Set of T, in s0 : Set of T)
+{- Elimina de s todos los elementos que NO pertenezcan a s0 -}
+
+proc diff(in/out s : Set of T, in s0 : Set of T)
+{- Elimina de s todos los elementos que pertenecen a s0 -}
+
+fun get(s : Set of T) ret e : T
+{- Obtiene algún elemento cualquiera del conjunto s -}
+{- PRE: not is_empty_set(s) -}
+
+fun copy_set(s1 : Set of T) ret s2 : Set of T
+{- Copia el conjunto s1 -}
+
+(a) Implementar los constructores de TAD Conjunto de elementos de tipo T,
+y las operaciones member, elim e inters, utilizando la siguiente representacion:
+
+implement Set of T where
+type Set of T = tuple 
+                    elems : array[0..N-1] of TAD
+                    size : nat
+                end tuple
+
+constructors
+{- Crea un conjunto vacío -}
+fun empty_set() ret s : Set of T
+    s.size := 0;
+end fun
+
+{- Agrega el elemento e al conjunto s -}
+proc add(in/out s : Set of T, in e : T)
+    if (member(e, s)) then
+        skip
+    else
+        s.size := s.size + 1
+        elems[s.size] := e
+    fi
+end proc
+
+destroy
+{- Libera memoria en caso que sea necesario. -}
+proc destroy_set(in/out s : Set of T)
+    skip
+end proc
+
+operations
+{- Devuelve la cantidad de elementos que tiene s -}
+fun cardinal(s : Set of T) ret n : nat
+    n := s.size
+end fun
+
+{- Devuelve True si s es vacío -}
+fun is_empty_set(s : Set of T) ret b : bool
+    b := s.size == 0
+end fun
+
+{- Devuelve True si el elemento e pertenece al conjunto s -}
+fun member(e : T, s : Set of T) ret b : bool
+    for i := 1 to s.size do
+        if (elems[i] == e) then
+            b := true
+            break
+        fi
+    od
+end fun
+
+{- Elimina el elemento e del conjunto s, en caso que esté -}
+proc elim(in/out s : Set of T, in e : T)
+    if (member(e, s)) then
+        var i : nat
+        i := 0
+
+        --buscar el indice
+        while ((i < s.size) && s.elems[i] != e) do
+            i := i + 1
+        od
+
+        --eliminarlo
+        while (i < s.size -1) do
+            s.elems[i] := s.elems[i+1]
+            i := i + 1
+        od
+        s.size := s.size - 1
+    else
+        skip
+    fi
+end proc
+
+{- Agrega a s todos los elementos de s0 -}
+proc union(in/out s : Set of T, in s0 : Set of T)
+    for i := 1 to s0.size do
+        add(s, s0.elems[i])
+    od
+end proc
+
+{- Elimina de s todos los elementos que NO pertenezcan a s0 -}
+proc inters(in/out s : Set of T, in s0 : Set of T)
+    for i := 1 to s.size do
+        if (not member(s.elems[i], s0)) then
+            elim(s, s.elems[i])
+        fi
+    od
+end proc
+
+{- Elimina de s todos los elementos que pertenecen a s0 -}
+proc diff(in/out s : Set of T, in s0 : Set of T)
+    for i := 1 to s.size do
+        if (member(s.elems[i], s0)) then
+            elim(s, s.elems[i])
+        fi
+    od
+    end proc
+
+{- Obtiene algún elemento cualquiera del conjunto s -}
+{- PRE: not is_empty_set(s) -}
+fun get(s : Set of T) ret e : T
+    e := s.elems[1]
+end fun
+
+{- Copia el conjunto s1 -}
+fun copy_set(s1 : Set of T) ret s2 : Set of T
+    s2 := empty_set()
+    for i := 1 to s1.size do
+        add(s2, s1.elems[i])
+    od
+end fun
+
+
+Existe alguna limitacion con esta representacion de conjuntos?
+en caso afirmativo indicar si algunas de las operaciones o constructores
+tendran alguna precondicion adicional.
+NOTA: si necesitas alguna operacion extra para implementar lo que se pide,
+debes implementarla tambien.
+
+(b) Utilizando el tipo abstracto Conjunto de elementos de tipo T,
+implementa una funcion que reciba un conjunto de enteros s, un numero entero i,
+y obtenga el entero perteneciente a s que esta mas cerca de i, es decir,
+un j que pertenece a s talque para todo k que pertenece a s, 
+|j - i| <= |k - i|. Por ejemplo si el conjunto es 1,5,9 y el entero 7,
+el resultado puede ser 5 o 9.
+
+fun num (s : Set of T, i : int) ret res : int 
+    if (member(s, i)) then
+        res := i
+    else
+        var before : int
+        var next : int
+        var currentElem : nat
+        var copy : Set of T
+
+        copy := copy_set(s)
+        before := -inf
+        next := +inf
+
+        while not is_empty_set(copy) do
+            currentElem := get(copy)
+            elim(copy, currentElem)
+
+            --encontrar el menor
+            if (currentElem < i) && (currentElem > before) then
+                before := currentElem
+            fi
+            
+            --encontrar el mayor
+            if (currentElem > i) && (currentElem < next) then
+                next := currentElem
+            fi
+        od
+        if (i - before) <= (next - i) then
+            res := before
+        else
+            res := next
+        fi
+    fi
+end fun
+
+
+/* Ejercicio voraz */
+
+
+recorrido 
+1 hasta n
+hay m pasajeros esperando
+para cada pasajero P se sabe de su subida y bajada
+con 1 <= si < bi <= n
+
+trasladar en un viaje a la mayor cantidad de pasajeros posibles
+
+ret: el numero maximo de pasajeros trasladables en un unico viaje
+
+a. indicar de manera simple y concreta, cual es el criterio de seleccion voraz para construir la solucion.
+
+elegir a la persona que su bajada sea la mas proxima.
+
+b. indicar que estructura de datos utilizara para resolver el problema.
+
+persona = tuple
+            id : int
+            sub : int
+            baj : int 
+        end tuple
+
+c. explicar en palabras como resolvera el problema el algoritmo.
+
+el conductor llegaria a la primer parada y "el criterio de seleccion voraz"
+devolveria a la persona que se baje mas pronto.
+se aumentara el contador de viajes
+descartar a las demas personas que ya no pueden viajar
+repetir hasta que el conductor llegue a la ultima parada
+
+
+d. implementar el algoritmo en el lenguaje de la materia de manera precisa.
+

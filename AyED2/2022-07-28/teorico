@@ -85,8 +85,13 @@ end proc
 
 /*Segundo ejercicio*/
 /*BACKTRACKING*/
-Ya pasaste los 35 y al fin te pones las pilas para hacer ejercicio fisico. En el gimnacio tienes un plan con "n" ejercicios donde cada ejercicio "i", con 1 <= i <= n tiene asociado un valor de entrenamiento general "ei". Ademas cada ejercicio i requiere un esfuerzo de brazos "bi", un esfuerzo de zona media "zi" y un esfuerzo de piernas "pi".
-Se debe encontrar el maximo valor de entrenamiento general obtenible al elegir ejercicios sin que el esfuerzo total en brazos supere el maximo B, el esfuerzo total en zona media supere el monto Z y el esfuerzo total en piernas supere el monto P.
+Ya pasaste los 35 y al fin te pones las pilas para hacer ejercicio fisico. 
+En el gimnacio tienes un plan con "n" ejercicios donde cada ejercicio "i", 
+con 1 <= i <= n tiene asociado un valor de entrenamiento general "ei". 
+Ademas cada ejercicio i requiere un esfuerzo de brazos "bi", un esfuerzo de zona media "zi" y un esfuerzo de piernas "pi".
+Se debe encontrar el maximo valor de entrenamiento general obtenible al elegir 
+ejercicios sin que el esfuerzo total en brazos supere el maximo B, el esfuerzo 
+total en zona media supere el monto Z y el esfuerzo total en piernas supere el monto P.
 
 Resolver el problema utilizando las tecnicas de backtracking dando una funcion recursiva. Para ello:
 (a) Especificar precisamente que calcula la funcion recursiva que resolvera el problema, indicando que argumentos toma y la utilidad de cada uno.

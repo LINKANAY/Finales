@@ -34,6 +34,29 @@ si i <= 0 && (c > 0 || c <= 0) -------------------> 0            /* 0 importe co
 si i > 0, c <= 0 ---------------------------------> 0    /* 0 importe conseguible */
 si i > 0, c > 0 ----------------------------------> max(mi + pedidosPanaderia(i-1, c-hi), pedidosPanaderia(i-1, c))
 
+fun pedidosPanaderia(n: int, H: int, m:array[1...n] of int, h:array[1...n] of int) ret maxImporte: int
+    --variables
+    var db : array[0...n, 0...n]
+
+    for i = 0 to n do
+        db[0, i] := 0
+    od
+
+    for i = 0 to H do
+        db[i, 0] := 0
+    od 
+
+    for i = 1 to n do
+        for j = 1 to H do
+            db[i, j] := max(m_i + pedidosPanaderia(i-1, H-h_i), pedidosPanaderia(i-1, H))
+        od
+    od
+
+    maxImporte := db[n, H]
+
+end fun
+
+
 #Ejercicio 2
 4. Usted se encuentra en un globo aerostatico sobrevolando el oceano cuando descubre que empieza a
 perder altura porque la lona esta levemente dañada. 
@@ -45,10 +68,23 @@ y afortunadamente la suma de los pesos de los objetos supera holgadamente P.
 (a) Especicar precisamente qué calcula la función recursiva que resolverá el problema, 
 indicando qué argumentos toma y la utilidad de cada uno.
 
-
+aterrizajeEnGlobo(i, h) "menor valor total de los objetos 1 a i que debo arrojar,
+                        de tal forma que su peso sea igual o mayor a h"
 
 (b) Dar la llamada o la expresión principal que resuelve el problema.
+
+aterrizajeEnGlobo(n, P)
+
 (c) Denfinir la función en notación matemática.
+
+aterrizajeEnGlobo(i, h)
+tengo objetos, tiro objetos
+tengo objetos, no tiro objetos
+no tengo objetos, tiro objetos
+no tengo objetos, no tiro objetos
+
+si i <= 0 && (h > 0 || h <= 0)  -----------> 0
+si i > 0, h > 0 ---------------------------> min(vi + aterrizajeEnGlobo(i-1, h-pi), aterrizajeEnGlobo(i-1, h))
 
 #Ejercicio 3
 5. Sus amigos quedaron encantados con el tel ́efono satelital, para las proximas vacaciones ofrecen
