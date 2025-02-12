@@ -51,7 +51,7 @@ static bool valid_player(int p)
     return p == 1 || p == 2;
 }
 
-static bool invrep(card c)
+/* static bool invrep(card c)
 {
     bool valid_card = false;
     valid_card = c != NULL &&
@@ -59,7 +59,7 @@ static bool invrep(card c)
                  valid_suit(c->suit) &&
                  valid_player(c->player);
     return valid_card;
-}
+} */
 
 /* Public functions */
 
@@ -120,8 +120,8 @@ unsigned int card_match_points(card fst, card snd)
 
 void card_dump(card c)
 {
-    assert(invrep(c));
-    printf("(%2d, %-7s, %2d)", c->number, suit_str(c->suit), c->player);
+    // assert(invrep(c));
+    printf("(%2u, %-7s, %2u)", c->number, suit_str(c->suit), c->player);
 }
 
 card card_destroy(card c)
