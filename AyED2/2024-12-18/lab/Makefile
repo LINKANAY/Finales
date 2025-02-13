@@ -15,3 +15,14 @@ $(TARGET): $(OBJECTS)
 
 clean:
 	rm -f $(TARGET) $(OBJECTS)
+
+gdb: $(TARGET)
+	@echo "run" > gdb_commands.txt
+	@echo "backtrace" >> gdb_commands.txt
+	@echo "quit" >> gdb_commands.txt
+	gdb -x gdb_commands.txt ./$(TARGET)
+	rm gdb_commands.txt
+
+
+valgrind: $(TARGET)
+	valgrind --leak-check=full --show-reachable=yes ./$(TARGET) -vf input/*.in
